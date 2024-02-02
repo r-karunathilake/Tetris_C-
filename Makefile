@@ -15,12 +15,14 @@ all: $(TARGET) # Default recipe
 
 $(TARGET): $(OBJS)
 		@echo "Compiling program..."
-		$(CXX) $(CXXFLAGS) -o $@ $^ # $@ (rule target) $^ (all rule dependencies)
+		# $@ (recipe target) $^ (all recipe dependencies)
+		$(CXX) $(CXXFLAGS) -o $@ $^ 
 
 # Recipe: build object files 
 %.o: %.cpp
 		@echo "Building $< object file..."
-		$(CXX) -c $(CXXFLAGS) -o $@ $< # $< (first dependency for the rule)
+		# $< (first dependency for the recipe)
+		$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 # Clean intermediate object files and executable
 clean:
