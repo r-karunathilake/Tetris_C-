@@ -16,4 +16,7 @@ TARGET	Makefile	/^TARGET   := tetris$/;"	m
 Tetris	tetris.cpp	/^Tetris::Tetris(){$/;"	f	class:Tetris
 Tetris	tetris.h	/^class Tetris{$/;"	c
 WARN	Makefile	/^WARN     := -Wall$/;"	m
+draw	tetris.cpp	/^void Tetris::draw(){$/;"	f	class:Tetris
+events	tetris.cpp	/^void Tetris::events(){$/;"	f	class:Tetris
 main	main.cpp	/^int main(int argc, char** argv){$/;"	f
+run	tetris.cpp	/^void Tetris::run(){$/;"	f	class:Tetris
