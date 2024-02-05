@@ -1,26 +1,20 @@
 #include <iostream>
 
 #include "tetris.h"
+#include "tilecolors.h"
 
 /**********************/
 /* TETRIS CONSTRUCTOR */
 /**********************/
-Tetris::Tetris(){
-  
+Tetris::Tetris(){ 
   m_window = std::make_shared<sf::RenderWindow>(
-    sf::VideoMode(360, 720), 
+    sf::VideoMode(300, 600), 
     "Tetris C++", 
     sf::Style::Titlebar | sf::Style::Close);
 
   m_window->setPosition(sf::Vector2i(100, 100));
+  m_window->setFramerateLimit(60); // 60 FPS
   
-  if(!m_tiles.loadFromFile("./assets/squares.png")){
-    std::cerr << "Error: unable to load tile assets:w" << std::endl; 
-  }
-
-  m_sprite = std::make_shared<sf::Sprite>();
-  m_sprite->setTexture(m_tiles);
-  m_sprite->setScale(sf::Vector2f(0.1, 0.1));
 }
 
 /***********************/
@@ -39,13 +33,13 @@ void Tetris::events(){
 
       case sf::Event::KeyPressed:{
         if(event->key.code == sf::Keyboard::Up){
-          rotate = true;
+          //rotate = true;
         }
         else if(event->key.code == sf::Keyboard::Left){
-          --dirx;
+          //--dirx;
         }
         else if(event->key.code == sf::Keyboard::Right){
-          ++dirx;
+          //++dirx;
         }
       }break;
     }
@@ -55,49 +49,27 @@ void Tetris::events(){
 void Tetris::draw(){
   // Clear the screen with black color
   m_window->clear(sf::Color::Black);
-
-  for(std::size_t idx {0}; idx < s_numSquares; ++idx){
-    m_sprite->setPosition(m_z[idx].x * 36, m_z[idx].y * 36);
-    m_window->draw(*m_sprite); 
+  
+  for(size_t row {0}; row < m_grid.size(); ++row){
+    for(size_t column {0}; column < m_grid[row].size(); ++column){
+      auto cellColor = m_grid[row][column];
+      auto cell {sf::RectangleShape(sf::Vector2f(s_cellSize - s_cellOutlineSize, s_cellSize - s_cellOutlineSize))};
+      cell.setPosition(column * s_cellSize + s_cellOutlineSize, row * s_cellSize + s_cellOutlineSize);
+      cell.setFillColor(getSFMLColor(cellColor));
+      m_window->draw(cell);
+    }
   }
-
   // End drawing current frame and display
   m_window->display();
 }
 
-void Tetris::moveDown(){
-  std::uint32_t number {3};
-  
-  if(m_z[0].x == 0){
-    for(std::size_t idx {0}; idx < s_numSquares; ++idx){
-      m_z[idx].x = m_shapes[number][idx] % 2;
-      m_z[idx].y = m_shapes[number][idx] / 2;
+void Tetris::printGrid(){
+  for(const auto& row:m_grid){
+    for(const auto& element:row){
+      std::cout << element << ' '; 
     }
+    std::cout << '\n';
   }
-}
-
-void Tetris::changePosition(){
-  for(std::size_t idx {0}; idx < s_numSquares; ++idx){
-    m_z[idx].x += dirx;
-  }
-}
-
-void Tetris::setRotate(){
-  if(rotate){
-    Coordinate cord = m_z[1];
-    for(std::size_t idx{0}; idx < s_numSquares; ++idx){
-      int x = m_z[idx].y - cord.y;
-      int y = m_z[idx].x - cord.x;
-
-      m_z[idx].x = cord.x - x;
-      m_z[idx].y = cord.y + y;
-    }
-  }
-}
-
-void Tetris::resetValues(){
-  dirx = 0;
-  rotate = false;
 }
 
 /***********************/
@@ -105,13 +77,8 @@ void Tetris::resetValues(){
 /***********************/
 void Tetris::run(){
   while(m_window->isOpen()){
-    events();
-    
-    changePosition();
-    setRotate();
-    moveDown();
-    resetValues(); 
-    
+    events(); 
     draw(); 
   }
+  //printGrid(); 
 }
