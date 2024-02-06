@@ -58,9 +58,8 @@ void Tetris::draw(){
  
   drawGrid();
 
-
   // Draw test block
-  ZBlock block = ZBlock();
+  SBlock block = SBlock();
   block.draw(m_window); 
 
   // End drawing current frame and display

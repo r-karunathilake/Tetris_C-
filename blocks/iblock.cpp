@@ -12,11 +12,16 @@ class IBlock : public Block{
         m_cells{initializeCells()}
     {
       initializeCells();
+      // Make sure the blocks spawn in the middle of the window
+      move(-1, 3);
     }
     
     void draw(std::shared_ptr<sf::RenderWindow> window){
-      Block::draw(window, m_cells);
+      // Update the block positions before drawing
+      Block::calculateCellPositions(m_cells[Block::getState()]);
+      Block::draw(window, m_cells[Block::getState()]);
     }
+
   private:
     std::map<int, std::vector<Position>> initializeCells() const override{
       

@@ -13,15 +13,26 @@ Block::Block(int id,
 }
 
 void Block::draw(std::shared_ptr<sf::RenderWindow> window, 
-                 std::map<int, std::vector<Position>>& cells) {
+                 std::vector<Position>& shapeTiles) {
 
-  std::vector<Position> shapeTiles = cells[m_rotationalState];
   for(const auto& tile : shapeTiles){ 
     auto cell {sf::RectangleShape(sf::Vector2f(m_cellSize - 1, m_cellSize - 1))};
-    cell.setPosition(tile.m_column * m_cellSize + 1, tile.m_row * m_cellSize + 1);
-
+    cell.setPosition(tile.getColumn() * m_cellSize + 1, tile.getRow() * m_cellSize + 1);
     cell.setFillColor(getSFMLColor(m_color));
     
     window->draw(cell);
   }
 }
+
+void Block::move(int rows, int columns){
+  rowOffset += rows;
+  columnOffset += columns; 
+}
+
+void Block::calculateCellPositions(std::vector<Position>& tilePositions){
+  for(auto& tilePos : tilePositions){
+    tilePos.updatePosition(rowOffset, columnOffset);
+  }
+}
+
+int Block::getState() const{return m_rotationalState;}

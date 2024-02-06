@@ -4,42 +4,66 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-Block	block.cpp	/^Block::Block(int id, $/;"	f	class:Block
-Block	block.h	/^class Block{$/;"	c
+Block	blocks/block.cpp	/^Block::Block(int id, $/;"	f	class:Block
+Block	blocks/block.h	/^class Block{$/;"	c
 CXX	Makefile	/^CXX      := clang++$/;"	m
 CXXFLAGS	Makefile	/^CXXFLAGS := $(DEBUG) $(STD) $(OPT) $(WARN) $(SFML)$/;"	m
-Color	tilecolors.h	/^  enum Color{$/;"	g	namespace:CustomColors
-CustomColors	tilecolors.h	/^namespace CustomColors{$/;"	n
+Color	blocks/tilecolors.h	/^  enum Color{$/;"	g	namespace:CustomColors
+CustomColors	blocks/tilecolors.h	/^namespace CustomColors{$/;"	n
 DEBUG	Makefile	/^DEBUG    := -g$/;"	m
-LBlock	lblock.cpp	/^    LBlock() $/;"	f	class:LBlock
-LBlock	lblock.cpp	/^class LBlock : public Block{$/;"	c	file:
+IBlock	blocks/iblock.cpp	/^    IBlock() $/;"	f	class:IBlock
+IBlock	blocks/iblock.cpp	/^class IBlock : public Block{$/;"	c	file:
+JBlock	blocks/jblock.cpp	/^    JBlock() $/;"	f	class:JBlock
+JBlock	blocks/jblock.cpp	/^class JBlock : public Block{$/;"	c	file:
+LBlock	blocks/lblock.cpp	/^    LBlock() $/;"	f	class:LBlock
+LBlock	blocks/lblock.cpp	/^class LBlock : public Block{$/;"	c	file:
 OBJS	Makefile	/^OBJS     := $(SOURCE:.cpp=.o) # Pattern substitution $/;"	m
+OBlock	blocks/oblock.cpp	/^    OBlock() $/;"	f	class:OBlock
+OBlock	blocks/oblock.cpp	/^class OBlock : public Block{$/;"	c	file:
 OPT	Makefile	/^OPT      := -O0 # Disable compiler optimization $/;"	m
-Position	position.cpp	/^Position::Position(int row, int column) $/;"	f	class:Position
-Position	position.h	/^class Position{$/;"	c
+Position	blocks/position.cpp	/^Position::Position(int row, int column) $/;"	f	class:Position
+Position	blocks/position.h	/^class Position{$/;"	c
+SBlock	blocks/sblock.cpp	/^    SBlock() $/;"	f	class:SBlock
+SBlock	blocks/sblock.cpp	/^class SBlock : public Block{$/;"	c	file:
 SFML	Makefile	/^SFML     := -lsfml-graphics -lsfml-window -lsfml-system$/;"	m
-SOURCE	Makefile	/^SOURCE   := main.cpp tetris.cpp block.cpp position.cpp lblock.cpp  $/;"	m
+SOURCE	Makefile	/^SOURCE   := main.cpp tetris.cpp $(wildcard **\/*.cpp)$/;"	m
 STD	Makefile	/^STD      := -std=c++20$/;"	m
 TARGET	Makefile	/^TARGET   := tetris$/;"	m
+TBlock	blocks/tblock.cpp	/^    TBlock() $/;"	f	class:TBlock
+TBlock	blocks/tblock.cpp	/^class TBlock : public Block{$/;"	c	file:
 Tetris	tetris.cpp	/^Tetris::Tetris(){ $/;"	f	class:Tetris
 Tetris	tetris.h	/^class Tetris{$/;"	c
 WARN	Makefile	/^WARN     := -Wall$/;"	m
-color_blue	tilecolors.h	/^    color_blue,$/;"	e	enum:CustomColors::Color
-color_cyan	tilecolors.h	/^    color_cyan,$/;"	e	enum:CustomColors::Color
-color_dark_grey	tilecolors.h	/^    color_dark_grey,$/;"	e	enum:CustomColors::Color
-color_green	tilecolors.h	/^    color_green,$/;"	e	enum:CustomColors::Color
-color_orange	tilecolors.h	/^    color_orange,$/;"	e	enum:CustomColors::Color
-color_purple	tilecolors.h	/^    color_purple,$/;"	e	enum:CustomColors::Color
-color_red	tilecolors.h	/^    color_red,$/;"	e	enum:CustomColors::Color
-color_transparent	tilecolors.h	/^    color_transparent,    $/;"	e	enum:CustomColors::Color
-color_yellow	tilecolors.h	/^    color_yellow,$/;"	e	enum:CustomColors::Color
-draw	block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> window, $/;"	f	class:Block
-draw	lblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:LBlock
+ZBlock	blocks/zblock.cpp	/^    ZBlock() $/;"	f	class:ZBlock
+ZBlock	blocks/zblock.cpp	/^class ZBlock : public Block{$/;"	c	file:
+calculateCellPositions	blocks/block.cpp	/^void Block::calculateCellPositions(std::vector<Position>& tilePositions){$/;"	f	class:Block
+color_blue	blocks/tilecolors.h	/^    color_blue,$/;"	e	enum:CustomColors::Color
+color_cyan	blocks/tilecolors.h	/^    color_cyan,$/;"	e	enum:CustomColors::Color
+color_dark_grey	blocks/tilecolors.h	/^    color_dark_grey,$/;"	e	enum:CustomColors::Color
+color_green	blocks/tilecolors.h	/^    color_green,$/;"	e	enum:CustomColors::Color
+color_orange	blocks/tilecolors.h	/^    color_orange,$/;"	e	enum:CustomColors::Color
+color_purple	blocks/tilecolors.h	/^    color_purple,$/;"	e	enum:CustomColors::Color
+color_red	blocks/tilecolors.h	/^    color_red,$/;"	e	enum:CustomColors::Color
+color_transparent	blocks/tilecolors.h	/^    color_transparent,    $/;"	e	enum:CustomColors::Color
+color_yellow	blocks/tilecolors.h	/^    color_yellow,$/;"	e	enum:CustomColors::Color
+draw	blocks/block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> window, $/;"	f	class:Block
+draw	blocks/iblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:IBlock
+draw	blocks/jblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:JBlock
+draw	blocks/lblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:LBlock
+draw	blocks/oblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:OBlock
+draw	blocks/sblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:SBlock
+draw	blocks/tblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:TBlock
+draw	blocks/zblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:ZBlock
 draw	tetris.cpp	/^void Tetris::draw(){$/;"	f	class:Tetris
 drawGrid	tetris.cpp	/^void Tetris::drawGrid(){$/;"	f	class:Tetris
 events	tetris.cpp	/^void Tetris::events(){$/;"	f	class:Tetris
-getSFMLColor	tilecolors.h	/^inline sf::Color getSFMLColor (CustomColors::Color color){$/;"	f
+getColumn	blocks/position.cpp	/^int Position::getColumn() const{return m_column;}$/;"	f	class:Position
+getRow	blocks/position.cpp	/^int Position::getRow() const{return m_row;}$/;"	f	class:Position
+getSFMLColor	blocks/tilecolors.h	/^inline sf::Color getSFMLColor (CustomColors::Color color){$/;"	f
+getState	blocks/block.cpp	/^int Block::getState() const{return m_rotationalState;}$/;"	f	class:Block
 main	main.cpp	/^int main(int argc, char** argv){$/;"	f
-operator <<	position.cpp	/^std::ostream& operator<< (std::ostream& out, const Position& obj){$/;"	f
+move	blocks/block.cpp	/^void Block::move(int rows, int columns){$/;"	f	class:Block
+operator <<	blocks/position.cpp	/^std::ostream& operator<< (std::ostream& out, const Position& obj){$/;"	f
 printGrid	tetris.cpp	/^void Tetris::printGrid(){$/;"	f	class:Tetris
 run	tetris.cpp	/^void Tetris::run(){ $/;"	f	class:Tetris
+updatePosition	blocks/position.cpp	/^void Position::updatePosition(int rowOffset, int columnOffset){$/;"	f	class:Position
