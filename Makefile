@@ -6,7 +6,7 @@ OPT      := -O0 # Disable compiler optimization
 WARN     := -Wall
 SFML     := -lsfml-graphics -lsfml-window -lsfml-system
 CXXFLAGS := $(DEBUG) $(STD) $(OPT) $(WARN) $(SFML)
-SOURCE   := main.cpp tetris.cpp 
+SOURCE   := main.cpp tetris.cpp block.cpp position.cpp lblock.cpp  
 OBJS     := $(SOURCE:.cpp=.o) # Pattern substitution 
 
 # Make recipes

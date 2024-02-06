@@ -13,7 +13,6 @@ class Tetris{
     static constexpr std::size_t s_numSquares {4};
     static constexpr std::size_t s_numShapes  {7};
     static constexpr std::size_t s_cellSize  {30};
-    static constexpr int s_cellOutlineSize    {1};
 
     // 2D array alias templating 
     template <typename  T, std::size_t Rows, std::size_t Cols>
@@ -26,6 +25,7 @@ class Tetris{
     void events();
     void draw();
     void printGrid();
+    void drawGrid();
 
   public:
     Tetris();

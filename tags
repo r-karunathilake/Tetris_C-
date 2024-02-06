@@ -4,15 +4,21 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Block	block.cpp	/^Block::Block(int id, $/;"	f	class:Block
+Block	block.h	/^class Block{$/;"	c
 CXX	Makefile	/^CXX      := clang++$/;"	m
 CXXFLAGS	Makefile	/^CXXFLAGS := $(DEBUG) $(STD) $(OPT) $(WARN) $(SFML)$/;"	m
 Color	tilecolors.h	/^  enum Color{$/;"	g	namespace:CustomColors
 CustomColors	tilecolors.h	/^namespace CustomColors{$/;"	n
 DEBUG	Makefile	/^DEBUG    := -g$/;"	m
+LBlock	lblock.cpp	/^    LBlock() $/;"	f	class:LBlock
+LBlock	lblock.cpp	/^class LBlock : public Block{$/;"	c	file:
 OBJS	Makefile	/^OBJS     := $(SOURCE:.cpp=.o) # Pattern substitution $/;"	m
 OPT	Makefile	/^OPT      := -O0 # Disable compiler optimization $/;"	m
+Position	position.cpp	/^Position::Position(int row, int column) $/;"	f	class:Position
+Position	position.h	/^class Position{$/;"	c
 SFML	Makefile	/^SFML     := -lsfml-graphics -lsfml-window -lsfml-system$/;"	m
-SOURCE	Makefile	/^SOURCE   := main.cpp tetris.cpp $/;"	m
+SOURCE	Makefile	/^SOURCE   := main.cpp tetris.cpp block.cpp position.cpp lblock.cpp  $/;"	m
 STD	Makefile	/^STD      := -std=c++20$/;"	m
 TARGET	Makefile	/^TARGET   := tetris$/;"	m
 Tetris	tetris.cpp	/^Tetris::Tetris(){ $/;"	f	class:Tetris
@@ -25,11 +31,15 @@ color_green	tilecolors.h	/^    color_green,$/;"	e	enum:CustomColors::Color
 color_orange	tilecolors.h	/^    color_orange,$/;"	e	enum:CustomColors::Color
 color_purple	tilecolors.h	/^    color_purple,$/;"	e	enum:CustomColors::Color
 color_red	tilecolors.h	/^    color_red,$/;"	e	enum:CustomColors::Color
+color_transparent	tilecolors.h	/^    color_transparent,    $/;"	e	enum:CustomColors::Color
 color_yellow	tilecolors.h	/^    color_yellow,$/;"	e	enum:CustomColors::Color
+draw	block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> window, $/;"	f	class:Block
+draw	lblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:LBlock
 draw	tetris.cpp	/^void Tetris::draw(){$/;"	f	class:Tetris
+drawGrid	tetris.cpp	/^void Tetris::drawGrid(){$/;"	f	class:Tetris
 events	tetris.cpp	/^void Tetris::events(){$/;"	f	class:Tetris
 getSFMLColor	tilecolors.h	/^inline sf::Color getSFMLColor (CustomColors::Color color){$/;"	f
 main	main.cpp	/^int main(int argc, char** argv){$/;"	f
+operator <<	position.cpp	/^std::ostream& operator<< (std::ostream& out, const Position& obj){$/;"	f
 printGrid	tetris.cpp	/^void Tetris::printGrid(){$/;"	f	class:Tetris
-resetValues	tetris.cpp	/^void Tetris::resetValues(){$/;"	f	class:Tetris
-run	tetris.cpp	/^void Tetris::run(){$/;"	f	class:Tetris
+run	tetris.cpp	/^void Tetris::run(){ $/;"	f	class:Tetris

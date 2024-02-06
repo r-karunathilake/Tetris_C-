@@ -2,6 +2,7 @@
 
 #include "tetris.h"
 #include "tilecolors.h"
+#include "lblock.cpp"
 
 /**********************/
 /* TETRIS CONSTRUCTOR */
@@ -49,18 +50,28 @@ void Tetris::events(){
 void Tetris::draw(){
   // Clear the screen with black color
   m_window->clear(sf::Color::Black);
-  
+ 
+  drawGrid();
+
+
+  // Draw test block
+  LBlock block = LBlock();
+  block.draw(m_window); 
+
+  // End drawing current frame and display
+  m_window->display();
+}
+
+void Tetris::drawGrid(){
   for(size_t row {0}; row < m_grid.size(); ++row){
     for(size_t column {0}; column < m_grid[row].size(); ++column){
       auto cellColor = m_grid[row][column];
-      auto cell {sf::RectangleShape(sf::Vector2f(s_cellSize - s_cellOutlineSize, s_cellSize - s_cellOutlineSize))};
-      cell.setPosition(column * s_cellSize + s_cellOutlineSize, row * s_cellSize + s_cellOutlineSize);
+      auto cell {sf::RectangleShape(sf::Vector2f(s_cellSize - 1, s_cellSize - 1))};
+      cell.setPosition(column * s_cellSize + 1, row * s_cellSize + 1);
       cell.setFillColor(getSFMLColor(cellColor));
       m_window->draw(cell);
     }
   }
-  // End drawing current frame and display
-  m_window->display();
 }
 
 void Tetris::printGrid(){
@@ -75,7 +86,7 @@ void Tetris::printGrid(){
 /***********************/
 /*    PUBLIC METHODS   */
 /***********************/
-void Tetris::run(){
+void Tetris::run(){ 
   while(m_window->isOpen()){
     events(); 
     draw(); 

@@ -5,3 +5,8 @@ Position::Position(int row, int column)
 {
 
 }
+
+std::ostream& operator<< (std::ostream& out, const Position& obj){
+  out << "(" << obj.m_row << ", " << obj.m_column << ')';
+  return out;
+}
