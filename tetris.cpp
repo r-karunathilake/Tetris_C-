@@ -1,26 +1,46 @@
 #include <iostream>
+#include <random>
 
 #include "tetris.h"
-#include "blocks/iblock.cpp"
-#include "blocks/jblock.cpp"
-#include "blocks/lblock.cpp"
-#include "blocks/oblock.cpp"
-#include "blocks/sblock.cpp"
-#include "blocks/tblock.cpp"
-#include "blocks/zblock.cpp"
 
 /**********************/
 /* TETRIS CONSTRUCTOR */
 /**********************/
-Tetris::Tetris(){ 
-  m_window = std::make_shared<sf::RenderWindow>(
-    sf::VideoMode(300, 600), 
-    "Tetris C++", 
-    sf::Style::Titlebar | sf::Style::Close);
-
+Tetris::Tetris() 
+  : m_window {std::make_shared<sf::RenderWindow>(sf::VideoMode(300, 600), "Tetris C++", 
+                                                 sf::Style::Titlebar | sf::Style::Close)},
+    gameBlocks {getGameBlocks()},
+    currentBlock {getRandomBlock()},
+    nextBlock {getRandomBlock()}
+{
   m_window->setPosition(sf::Vector2i(100, 100));
-  m_window->setFramerateLimit(60); // 60 FPS
-  
+  m_window->setFramerateLimit(60); // 60 FPS  
+}
+/***********************/
+/*   PRIVATE METHODS   */
+/***********************/
+std::shared_ptr<Block> Tetris::getRandomBlock(){
+  // Populate game blocks
+  if(!gameBlocks.empty()){
+    gameBlocks = getGameBlocks(); 
+  }
+
+  /* Each of the 7 blocks appear in game before a new cycle */ 
+  int randIndex = rand() % static_cast<int>(gameBlocks.size());
+  std::shared_ptr<Block> pBlock {gameBlocks[randIndex]};
+  gameBlocks.erase(gameBlocks.begin() + randIndex);
+
+  return pBlock;
+}
+
+std::vector<std::shared_ptr<Block>> Tetris::getGameBlocks() const{
+  return {std::make_shared<IBlock>(), 
+          std::make_shared<JBlock>(), 
+          std::make_shared<LBlock>(), 
+          std::make_shared<OBlock>(), 
+          std::make_shared<SBlock>(), 
+          std::make_shared<TBlock>(), 
+          std::make_shared<ZBlock>()};
 }
 
 /***********************/
@@ -57,10 +77,7 @@ void Tetris::draw(){
   m_window->clear(sf::Color::Black);
  
   drawGrid();
-
-  // Draw test block
-  SBlock block = SBlock();
-  block.draw(m_window); 
+  currentBlock->draw(m_window); 
 
   // End drawing current frame and display
   m_window->display();
