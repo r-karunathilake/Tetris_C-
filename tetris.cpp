@@ -1,8 +1,13 @@
 #include <iostream>
 
 #include "tetris.h"
-#include "tilecolors.h"
-#include "lblock.cpp"
+#include "blocks/iblock.cpp"
+#include "blocks/jblock.cpp"
+#include "blocks/lblock.cpp"
+#include "blocks/oblock.cpp"
+#include "blocks/sblock.cpp"
+#include "blocks/tblock.cpp"
+#include "blocks/zblock.cpp"
 
 /**********************/
 /* TETRIS CONSTRUCTOR */
@@ -55,7 +60,7 @@ void Tetris::draw(){
 
 
   // Draw test block
-  LBlock block = LBlock();
+  ZBlock block = ZBlock();
   block.draw(m_window); 
 
   // End drawing current frame and display

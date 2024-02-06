@@ -4,7 +4,7 @@
 #include <memory>            // For std::shared_ptr access 
 #include <vector>
 
-#include "tilecolors.h"
+#include "blocks/tilecolors.h"
 
 class Tetris{
   private:
