@@ -8,20 +8,12 @@ class IBlock : public Block{
   public:
     IBlock() 
       // Call base class constructor
-      : Block{3, CustomColors::Color::color_cyan},
-        m_cells{initializeCells()}
+      : Block{initializeCells(), 3, CustomColors::Color::color_cyan}
     {
-      initializeCells();
       // Make sure the blocks spawn in the middle of the window
       move(-1, 3);
     }
     
-    void draw(std::shared_ptr<sf::RenderWindow> window){
-      // Update the block positions before drawing
-      Block::calculateCellPositions(m_cells[Block::getState()]);
-      Block::draw(window, m_cells[Block::getState()]);
-    }
-
   private:
     std::map<int, std::vector<Position>> initializeCells() const override{
       
@@ -33,6 +25,4 @@ class IBlock : public Block{
       };
       return m_cells; 
     }
-
-    std::map<int, std::vector<Position>> m_cells {}; 
 };

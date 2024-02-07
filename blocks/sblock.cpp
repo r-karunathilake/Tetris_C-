@@ -8,19 +8,12 @@ class SBlock : public Block{
   public:
     SBlock() 
       // Call base class constructor
-      : Block{5, CustomColors::Color::color_green},
-        m_cells{initializeCells()}
+      : Block{initializeCells(), 5, CustomColors::Color::color_green}
     {
-      initializeCells();
       // Make sure the blocks spawn in the middle of the window
       move(0, 3);
     }
     
-    void draw(std::shared_ptr<sf::RenderWindow> window){
-      // Update the block positions before drawing
-      Block::calculateCellPositions(m_cells[Block::getState()]);
-      Block::draw(window, m_cells[Block::getState()]);
-    }
   private:
     std::map<int, std::vector<Position>> initializeCells() const override{
       
@@ -32,6 +25,4 @@ class SBlock : public Block{
       };
       return m_cells; 
     }
-
-    std::map<int, std::vector<Position>> m_cells {}; 
 };

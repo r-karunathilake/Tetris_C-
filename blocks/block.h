@@ -10,30 +10,36 @@ class Block{
 
   public:
     // Constructor
-    Block(int id = 0, 
+    Block(std::map<int, std::vector<Position>> cells, 
+          int id = 0, 
           CustomColors::Color color = color_transparent,
           std::size_t cellSize = 30, 
           int state = 0);
-    
+   
+    // Virtual destructor 
+    virtual ~Block(){};
+
     // Public methods
     int  getState() const;
+    int  getID() const;
     void move(int rows, int columns);
-
-  protected:
-    int m_id {};
-    
+    void draw(std::shared_ptr<sf::RenderWindow> window);
+  
+  protected: 
     // Protected methods
-    void draw(std::shared_ptr<sf::RenderWindow> window, 
-              std::vector<Position>& shapeTiles);
-
     void calculateCellPositions(std::vector<Position>& oldCells); 
     
     virtual std::map<int, std::vector<Position>> initializeCells() const = 0; 
 
   private:
+    std::map<int, std::vector<Position>> m_cells {}; 
+    int m_id {};
     CustomColors::Color m_color {};      
     std::size_t m_cellSize {}; 
-    int m_rotationalState {};
+    int m_rotationalState {}; 
     int rowOffset {};
     int columnOffset {}; 
+
+    // Private methods
+    void resetOffsets();
 };
