@@ -101,3 +101,12 @@ posVect& Block::getTilePositions(int state){
     throw std::runtime_error("Unable to provide a valid position vector for the given state!");
   }
 }
+
+std::size_t Block::getNumStates() const{
+  return std::size(m_cells);
+}
+
+std::ostream& operator<< (std::ostream& out, const Block& obj){
+  out << "Block ID: " << obj.m_id << ", " <<  "State: "<< obj.m_rotationalState << '\n';
+  return out;
+}

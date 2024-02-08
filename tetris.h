@@ -17,7 +17,8 @@
 
 class Tetris{
   private:
-    static inline    sf::Time    s_updateTime {sf::milliseconds(200)};
+    static inline    bool           gameOver     {false};
+    static inline    sf::Time       s_updateTime {sf::milliseconds(10)};
     static constexpr std::ptrdiff_t s_numRows    {20};
     static constexpr std::ptrdiff_t s_numCols    {10};
     static constexpr std::ptrdiff_t s_numSquares {4};
@@ -34,11 +35,15 @@ class Tetris{
     bool isValidTiles(const std::vector<Position>& tilePositions) const;
     bool isGameUpdateEvent();
     bool isGridCellEmpty(std::ptrdiff_t row, std::ptrdiff_t column) const;
+    bool noValidMoves() const;
     void moveBlockDown();
     void freezeBlock();
     void clearGridRow(std::ptrdiff_t row); 
     void moveGridRowDown(std::ptrdiff_t row, std::ptrdiff_t numRowsDown);
-    int  clearAllCompleteGridRows(); 
+    void restartGame(); 
+    void resetGameGrid(); 
+    int  clearAllCompleteGridRows();
+
 
     /* Private attributes */
     std::shared_ptr<sf::RenderWindow> m_window {}; 

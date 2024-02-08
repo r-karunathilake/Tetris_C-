@@ -59,6 +59,7 @@ getColumn	blocks/position.cpp	/^std::ptrdiff_t Position::getColumn() const{retur
 getGameBlocks	tetris.cpp	/^std::vector<std::unique_ptr<Block>> Tetris::getGameBlocks() const{$/;"	f	class:Tetris
 getID	blocks/block.cpp	/^int Block::getID() const {return m_id;}$/;"	f	class:Block
 getNextValidState	blocks/block.cpp	/^int Block::getNextValidState() const{$/;"	f	class:Block
+getNumStates	blocks/block.cpp	/^std::size_t Block::getNumStates() const{$/;"	f	class:Block
 getRandomBlock	tetris.cpp	/^std::unique_ptr<Block> Tetris::getRandomBlock(){$/;"	f	class:Tetris
 getRow	blocks/position.cpp	/^std::ptrdiff_t Position::getRow() const{return m_row;}$/;"	f	class:Position
 getSFMLColor	blocks/tilecolors.h	/^inline sf::Color getSFMLColor (CustomColors::Color color){$/;"	f
@@ -76,9 +77,13 @@ main	main.cpp	/^int main(int argc, char** argv){$/;"	f
 move	blocks/block.cpp	/^void Block::move(int rows, int columns){$/;"	f	class:Block
 moveBlockDown	tetris.cpp	/^void Tetris::moveBlockDown(){$/;"	f	class:Tetris
 moveGridRowDown	tetris.cpp	/^void Tetris::moveGridRowDown(std::ptrdiff_t row, std::ptrdiff_t numRowsDown){$/;"	f	class:Tetris
+noValidMoves	tetris.cpp	/^bool Tetris::noValidMoves() const{$/;"	f	class:Tetris
+operator <<	blocks/block.cpp	/^std::ostream& operator<< (std::ostream& out, const Block& obj){$/;"	f
 operator <<	blocks/position.cpp	/^std::ostream& operator<< (std::ostream& out, const Position& obj){$/;"	f
 printGrid	tetris.cpp	/^void Tetris::printGrid(){$/;"	f	class:Tetris
+resetGameGrid	tetris.cpp	/^void Tetris::resetGameGrid(){$/;"	f	class:Tetris
 resetOffsets	blocks/block.cpp	/^void Block::resetOffsets(){$/;"	f	class:Block
+restartGame	tetris.cpp	/^void Tetris::restartGame(){$/;"	f	class:Tetris
 rotate	blocks/block.cpp	/^void Block::rotate(){$/;"	f	class:Block
 run	tetris.cpp	/^void Tetris::run(){ $/;"	f	class:Tetris
 updateCellPositions	blocks/block.cpp	/^void Block::updateCellPositions(std::map<int, posVect>& tileStates){$/;"	f	class:Block

@@ -23,12 +23,16 @@ class Block{
     int  getState() const;
     int  getNextValidState() const; 
     int  getID() const;
+    std::size_t  getNumStates() const;
     CustomColors::Color getColor() const;
     void move(int rows, int columns);
     void rotate();
     void draw(std::shared_ptr<sf::RenderWindow> pWindow);
     std::vector<Position>& getTilePositions();
     std::vector<Position>& getTilePositions(int blockState);
+    
+    // Overloaded IO steam operator 
+    friend std::ostream& operator<< (std::ostream& out, const Block& obj);
 
   protected: 
     // Protected methods
