@@ -18,23 +18,27 @@
 class Tetris{
   private:
     static inline    sf::Time    s_updateTime {sf::milliseconds(200)};
-    static constexpr std::size_t s_numRows    {20};
-    static constexpr std::size_t s_numCols    {10};
-    static constexpr std::size_t s_numSquares {4};
-    static constexpr std::size_t s_numShapes  {7};
-    static constexpr std::size_t s_cellSize   {30};
+    static constexpr std::ptrdiff_t s_numRows    {20};
+    static constexpr std::ptrdiff_t s_numCols    {10};
+    static constexpr std::ptrdiff_t s_numSquares {4};
+    static constexpr std::ptrdiff_t s_numShapes  {7};
+    static constexpr std::ptrdiff_t s_cellSize   {30};
 
     /* Private methods */
     std::unique_ptr<Block> getRandomBlock(); 
     std::vector<std::unique_ptr<Block>> getGameBlocks() const;
     std::shared_ptr<sf::RenderWindow> configGameWindow() const;
-    bool isValidMove(int rows, int columns) const;
+    bool isGridRowComplete(std::ptrdiff_t row) const;
+    bool isValidMove(std::ptrdiff_t rows, std::ptrdiff_t columns) const;
     bool isValidRotation(int nextState) const;
     bool isValidTiles(const std::vector<Position>& tilePositions) const;
     bool isGameUpdateEvent();
-    bool isGridCellEmpty(int row, int column) const;
+    bool isGridCellEmpty(std::ptrdiff_t row, std::ptrdiff_t column) const;
     void moveBlockDown();
     void freezeBlock();
+    void clearGridRow(std::ptrdiff_t row); 
+    void moveGridRowDown(std::ptrdiff_t row, std::ptrdiff_t numRowsDown);
+    int  clearAllCompleteGridRows(); 
 
     /* Private attributes */
     std::shared_ptr<sf::RenderWindow> m_window {}; 
@@ -44,7 +48,7 @@ class Tetris{
     sf::Clock clock; // Start the SFML game clock
     
     // 2D array alias templating 
-    template <typename  T, std::size_t Rows, std::size_t Cols>
+    template <typename  T, std::ptrdiff_t Rows, std::ptrdiff_t Cols>
     using array2D = std::array<std::array<T, Cols>, Rows>; 
     array2D<CustomColors::Color, s_numRows, s_numCols> m_grid {}; 
 

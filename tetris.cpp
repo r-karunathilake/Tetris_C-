@@ -32,8 +32,8 @@ std::unique_ptr<Block> Tetris::getRandomBlock(){
   // Generate a random index 
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<std::size_t> dis(0, gameBlocks.size() - 1);
-  std::size_t randIndex = dis(gen); 
+  std::uniform_int_distribution<std::ptrdiff_t> dis(0, gameBlocks.size() - 1);
+  std::ptrdiff_t randIndex = dis(gen); 
   
   /* Each of the 7 blocks appear in game before a new cycle */ 
   std::unique_ptr<Block> pBlock {std::move(gameBlocks[randIndex])};
@@ -56,11 +56,11 @@ std::vector<std::unique_ptr<Block>> Tetris::getGameBlocks() const{
   return vector;
 }
 
-bool Tetris::isValidMove(int row, int column) const{
+bool Tetris::isValidMove(std::ptrdiff_t row, std::ptrdiff_t column) const{
   auto tilePositions = pCurrentBlock->getTilePositions();
   for(const auto& tilePos : tilePositions){
-    int new_row {tilePos.getRow() + row};
-    int new_column {tilePos.getColumn() + column};
+    std::ptrdiff_t new_row {tilePos.getRow() + row};
+    std::ptrdiff_t new_column {tilePos.getColumn() + column};
 
     if(new_row < 0 || new_row > s_numRows - 1 || new_column < 0 || new_column > s_numCols - 1 || !isGridCellEmpty(new_row, new_column)){
       return false;
@@ -71,8 +71,8 @@ bool Tetris::isValidMove(int row, int column) const{
 
 bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{
   for(const auto& tilePos : tilePositions){
-    int row {tilePos.getRow()};
-    int column {tilePos.getColumn()};
+    std::ptrdiff_t row {tilePos.getRow()};
+    std::ptrdiff_t column {tilePos.getColumn()};
 
     if(row < 0 || row > s_numRows - 1 || column < 0 || column > s_numCols - 1
        || !isGridCellEmpty(row, column)){
@@ -115,13 +115,55 @@ void Tetris::freezeBlock(){
   }
   pCurrentBlock = std::move(pNextBlock); // Freeze movement 
   pNextBlock = getRandomBlock(); 
+  // Check for complete grid rows and clear them
+  clearAllCompleteGridRows(); 
 }
 
-bool Tetris::isGridCellEmpty(int row, int column) const{
+bool Tetris::isGridCellEmpty(std::ptrdiff_t row, std::ptrdiff_t column) const{
   if(m_grid[row][column] == 0){
     return true;
   }
   return false;
+}
+
+bool Tetris::isGridRowComplete(std::ptrdiff_t row) const{
+  auto gridRow {m_grid[row]};  
+  for(const auto& color : gridRow){
+    if(color == CustomColors::color_dark_grey){
+      return false;
+    }
+  } 
+  return true; 
+}
+
+void Tetris::clearGridRow(std::ptrdiff_t row){
+  for(std::ptrdiff_t column {0}; column < s_numCols; ++column){
+    // Set tile to background color
+    m_grid[row][column] = CustomColors::color_dark_grey;
+  }
+}
+
+void Tetris::moveGridRowDown(std::ptrdiff_t row, std::ptrdiff_t numRowsDown){
+  for(std::ptrdiff_t column {0}; column < s_numCols; ++column){
+    m_grid[row + numRowsDown][column] = m_grid[row][column];
+    // Set tile to background color
+    m_grid[row][column] = CustomColors::color_dark_grey;
+  }
+}
+
+int Tetris::clearAllCompleteGridRows(){
+  std::ptrdiff_t numCompletedRows {0};
+  // Iterate through the whole game grid
+  for(std::ptrdiff_t currentRow {s_numRows - 1}; currentRow >= 0; --currentRow){
+    if(isGridRowComplete(currentRow)){
+      clearGridRow(currentRow);
+      ++numCompletedRows;
+    }
+    else if(numCompletedRows > 0){
+      moveGridRowDown(currentRow, numCompletedRows);
+    }
+  }
+  return static_cast<int>(numCompletedRows);
 }
 
 /***********************/

@@ -1,6 +1,6 @@
 #include "position.h"
 
-Position::Position(int row, int column) 
+Position::Position(std::ptrdiff_t row, std::ptrdiff_t column) 
   : m_row{ row }, m_column{ column }
 {
 
@@ -11,10 +11,10 @@ std::ostream& operator<< (std::ostream& out, const Position& obj){
   return out;
 }
 
-void Position::updatePosition(int rowOffset, int columnOffset){
+void Position::updatePosition(std::ptrdiff_t rowOffset, std::ptrdiff_t columnOffset){
   m_row    += rowOffset;
   m_column += columnOffset;
 }
 
-int Position::getColumn() const{return m_column;}
-int Position::getRow() const{return m_row;}
+std::ptrdiff_t Position::getColumn() const{return m_column;}
+std::ptrdiff_t Position::getRow() const{return m_row;}
