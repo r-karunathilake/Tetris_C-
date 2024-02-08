@@ -36,6 +36,7 @@ Tetris	tetris.h	/^class Tetris{$/;"	c
 WARN	Makefile	/^WARN     := -Wall$/;"	m
 ZBlock	blocks/zblock.cpp	/^    ZBlock() $/;"	f	class:ZBlock
 ZBlock	blocks/zblock.cpp	/^class ZBlock : public Block{$/;"	c	file:
+clock	tetris.h	/^    sf::Clock clock; \/\/ Start the SFML game clock$/;"	m	class:Tetris
 color_blue	blocks/tilecolors.h	/^    color_blue,$/;"	e	enum:CustomColors::Color
 color_cyan	blocks/tilecolors.h	/^    color_cyan,$/;"	e	enum:CustomColors::Color
 color_dark_grey	blocks/tilecolors.h	/^    color_dark_grey,$/;"	e	enum:CustomColors::Color
@@ -60,12 +61,14 @@ getSFMLColor	blocks/tilecolors.h	/^inline sf::Color getSFMLColor (CustomColors::
 getState	blocks/block.cpp	/^int Block::getState() const{return m_rotationalState;}$/;"	f	class:Block
 getTilePositions	blocks/block.cpp	/^posVect& Block::getTilePositions() {$/;"	f	class:Block
 getTilePositions	blocks/block.cpp	/^posVect& Block::getTilePositions(int state){$/;"	f	class:Block
+isGameUpdateEvent	tetris.cpp	/^bool Tetris::isGameUpdateEvent(){$/;"	f	class:Tetris
 isMovePending	blocks/block.cpp	/^bool Block::isMovePending() const{$/;"	f	class:Block
 isValidMove	tetris.cpp	/^bool Tetris::isValidMove(int row, int column) const{$/;"	f	class:Tetris
 isValidRotation	tetris.cpp	/^bool Tetris::isValidRotation(int nextState) const{$/;"	f	class:Tetris
 isValidTiles	tetris.cpp	/^bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{$/;"	f	class:Tetris
 main	main.cpp	/^int main(int argc, char** argv){$/;"	f
 move	blocks/block.cpp	/^void Block::move(int rows, int columns){$/;"	f	class:Block
+moveBlockDown	tetris.cpp	/^void Tetris::moveBlockDown(){$/;"	f	class:Tetris
 operator <<	blocks/position.cpp	/^std::ostream& operator<< (std::ostream& out, const Position& obj){$/;"	f
 printGrid	tetris.cpp	/^void Tetris::printGrid(){$/;"	f	class:Tetris
 resetOffsets	blocks/block.cpp	/^void Block::resetOffsets(){$/;"	f	class:Block

@@ -86,6 +86,22 @@ bool Tetris::isValidRotation(int nextState) const{
   return isValidTiles(tilePositions); 
 }
 
+void Tetris::moveBlockDown(){
+  if(isValidMove(1, 0)){
+    currentBlock->move(1, 0);
+  }
+}
+
+bool Tetris::isGameUpdateEvent(){
+  sf::Time timeElapsed {clock.getElapsedTime()};
+  
+  if(timeElapsed >= s_updateTime){
+    clock.restart();
+    return true;
+  }
+  return false;
+}
+
 /***********************/
 /*  PROTECTED METHODS  */
 /***********************/
@@ -177,7 +193,10 @@ void Tetris::printGrid(){
 void Tetris::run(){ 
   while(m_window->isOpen()){
     events(); 
-    draw(); 
+    draw();
+    if(isGameUpdateEvent()){
+      moveBlockDown(); 
+    }
     // printGrid(); 
   }
 }
