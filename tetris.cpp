@@ -8,8 +8,8 @@
 Tetris::Tetris() 
   : m_window     {configGameWindow()},
     gameBlocks   {getGameBlocks()},
-    currentBlock {getRandomBlock()},
-    nextBlock    {getRandomBlock()}
+    pCurrentBlock {getRandomBlock()},
+    pNextBlock    {getRandomBlock()}
 {
   m_window->setPosition(sf::Vector2i(100, 100));
   m_window->setFramerateLimit(60); // 60 FPS  
@@ -57,12 +57,12 @@ std::vector<std::unique_ptr<Block>> Tetris::getGameBlocks() const{
 }
 
 bool Tetris::isValidMove(int row, int column) const{
-  auto tilePositions = currentBlock->getTilePositions();
+  auto tilePositions = pCurrentBlock->getTilePositions();
   for(const auto& tilePos : tilePositions){
     int new_row {tilePos.getRow() + row};
     int new_column {tilePos.getColumn() + column};
 
-    if(new_row < 0 || new_row > s_numRows - 1 || new_column < 0 || new_column > s_numCols - 1){
+    if(new_row < 0 || new_row > s_numRows - 1 || new_column < 0 || new_column > s_numCols - 1 || !isGridCellEmpty(new_row, new_column)){
       return false;
     }
   }
@@ -74,7 +74,8 @@ bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{
     int row {tilePos.getRow()};
     int column {tilePos.getColumn()};
 
-    if(row < 0 || row > s_numRows - 1 || column < 0 || column > s_numCols - 1){
+    if(row < 0 || row > s_numRows - 1 || column < 0 || column > s_numCols - 1
+       || !isGridCellEmpty(row, column)){
       return false; 
     }
   }  
@@ -82,13 +83,17 @@ bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{
 }
 
 bool Tetris::isValidRotation(int nextState) const{
-  auto tilePositions = currentBlock->getTilePositions(nextState); 
+  auto tilePositions = pCurrentBlock->getTilePositions(nextState); 
   return isValidTiles(tilePositions); 
 }
 
 void Tetris::moveBlockDown(){
+  // Look ahead to make sure the move is valid 
   if(isValidMove(1, 0)){
-    currentBlock->move(1, 0);
+    pCurrentBlock->move(1, 0);
+  }
+  else{// The block has reached the bottom screen or collided with another block
+    freezeBlock(); 
   }
 }
 
@@ -97,6 +102,23 @@ bool Tetris::isGameUpdateEvent(){
   
   if(timeElapsed >= s_updateTime){
     clock.restart();
+    return true;
+  }
+  return false;
+}
+
+void Tetris::freezeBlock(){
+  auto tilePositions {pCurrentBlock->getTilePositions()};
+  for(const auto& tilePos: tilePositions){
+    // Update game grid with the color of Tetris block 
+    m_grid[tilePos.getRow()][tilePos.getColumn()] = pCurrentBlock->getColor();
+  }
+  pCurrentBlock = std::move(pNextBlock); // Freeze movement 
+  pNextBlock = getRandomBlock(); 
+}
+
+bool Tetris::isGridCellEmpty(int row, int column) const{
+  if(m_grid[row][column] == 0){
     return true;
   }
   return false;
@@ -119,27 +141,25 @@ void Tetris::events(){
       case sf::Event::KeyPressed:{
         switch(event->key.code){
           case sf::Keyboard::Up:{
-            if(isValidRotation(currentBlock->getNextValidState())){
-              currentBlock->rotate();
+            if(isValidRotation(pCurrentBlock->getNextValidState())){
+              pCurrentBlock->rotate();
             }
           }break;
 
           case sf::Keyboard::Left:{
             if(isValidMove(0, -1)){
-              currentBlock->move(0, -1);
+              pCurrentBlock->move(0, -1);
             }
           }break;
 
           case sf::Keyboard::Right:{
             if(isValidMove(0, 1)){
-            currentBlock->move(0, 1);
+            pCurrentBlock->move(0, 1);
             }
           }break;
 
           case sf::Keyboard::Down:{
-            if(isValidMove(1, 0)){
-              currentBlock->move(1, 0);
-            }
+            moveBlockDown();  
           }break;
 
           default:{
@@ -160,7 +180,7 @@ void Tetris::draw(){
   m_window->clear(sf::Color::Black);
  
   drawGrid();
-  currentBlock->draw(m_window); 
+  pCurrentBlock->draw(m_window); 
 
   // End drawing current frame and display
   m_window->display();

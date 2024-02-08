@@ -23,6 +23,7 @@ class Block{
     int  getState() const;
     int  getNextValidState() const; 
     int  getID() const;
+    CustomColors::Color getColor() const;
     void move(int rows, int columns);
     void rotate();
     void draw(std::shared_ptr<sf::RenderWindow> pWindow);

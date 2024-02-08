@@ -31,14 +31,16 @@ class Tetris{
     bool isValidMove(int rows, int columns) const;
     bool isValidRotation(int nextState) const;
     bool isValidTiles(const std::vector<Position>& tilePositions) const;
-    void moveBlockDown();
     bool isGameUpdateEvent();
+    bool isGridCellEmpty(int row, int column) const;
+    void moveBlockDown();
+    void freezeBlock();
 
     /* Private attributes */
     std::shared_ptr<sf::RenderWindow> m_window {}; 
     std::vector<std::unique_ptr<Block>> gameBlocks {};
-    std::unique_ptr<Block> currentBlock {};
-    std::unique_ptr<Block> nextBlock {};
+    std::unique_ptr<Block> pCurrentBlock {};
+    std::unique_ptr<Block> pNextBlock {};
     sf::Clock clock; // Start the SFML game clock
     
     // 2D array alias templating 

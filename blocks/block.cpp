@@ -68,6 +68,8 @@ void Block::updateCellPositions(std::map<int, posVect>& tileStates){
 
 int Block::getState() const{return m_rotationalState;}
 int Block::getID() const {return m_id;}
+CustomColors::Color Block::getColor() const{return m_color;}
+
 void Block::resetOffsets(){
   m_rowOffset = 0;
   m_columnOffset = 0;
