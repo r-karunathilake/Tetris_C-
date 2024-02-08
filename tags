@@ -4,7 +4,7 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-Block	blocks/block.cpp	/^Block::Block(int id, $/;"	f	class:Block
+Block	blocks/block.cpp	/^Block::Block(std::map<int, posVect> cells, int id, $/;"	f	class:Block
 Block	blocks/block.h	/^class Block{$/;"	c
 CXX	Makefile	/^CXX      := clang++$/;"	m
 CXXFLAGS	Makefile	/^CXXFLAGS := $(DEBUG) $(STD) $(OPT) $(WARN) $(SFML)$/;"	m
@@ -31,12 +31,11 @@ STD	Makefile	/^STD      := -std=c++20$/;"	m
 TARGET	Makefile	/^TARGET   := tetris$/;"	m
 TBlock	blocks/tblock.cpp	/^    TBlock() $/;"	f	class:TBlock
 TBlock	blocks/tblock.cpp	/^class TBlock : public Block{$/;"	c	file:
-Tetris	tetris.cpp	/^Tetris::Tetris(){ $/;"	f	class:Tetris
+Tetris	tetris.cpp	/^Tetris::Tetris() $/;"	f	class:Tetris
 Tetris	tetris.h	/^class Tetris{$/;"	c
 WARN	Makefile	/^WARN     := -Wall$/;"	m
 ZBlock	blocks/zblock.cpp	/^    ZBlock() $/;"	f	class:ZBlock
 ZBlock	blocks/zblock.cpp	/^class ZBlock : public Block{$/;"	c	file:
-calculateCellPositions	blocks/block.cpp	/^void Block::calculateCellPositions(std::vector<Position>& tilePositions){$/;"	f	class:Block
 color_blue	blocks/tilecolors.h	/^    color_blue,$/;"	e	enum:CustomColors::Color
 color_cyan	blocks/tilecolors.h	/^    color_cyan,$/;"	e	enum:CustomColors::Color
 color_dark_grey	blocks/tilecolors.h	/^    color_dark_grey,$/;"	e	enum:CustomColors::Color
@@ -46,24 +45,32 @@ color_purple	blocks/tilecolors.h	/^    color_purple,$/;"	e	enum:CustomColors::Co
 color_red	blocks/tilecolors.h	/^    color_red,$/;"	e	enum:CustomColors::Color
 color_transparent	blocks/tilecolors.h	/^    color_transparent,    $/;"	e	enum:CustomColors::Color
 color_yellow	blocks/tilecolors.h	/^    color_yellow,$/;"	e	enum:CustomColors::Color
-draw	blocks/block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> window, $/;"	f	class:Block
-draw	blocks/iblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:IBlock
-draw	blocks/jblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:JBlock
-draw	blocks/lblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:LBlock
-draw	blocks/oblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:OBlock
-draw	blocks/sblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:SBlock
-draw	blocks/tblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:TBlock
-draw	blocks/zblock.cpp	/^    void draw(std::shared_ptr<sf::RenderWindow> window){$/;"	f	class:ZBlock
+configGameWindow	tetris.cpp	/^std::shared_ptr<sf::RenderWindow> Tetris::configGameWindow() const{$/;"	f	class:Tetris
+draw	blocks/block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> pWindow) {$/;"	f	class:Block
 draw	tetris.cpp	/^void Tetris::draw(){$/;"	f	class:Tetris
 drawGrid	tetris.cpp	/^void Tetris::drawGrid(){$/;"	f	class:Tetris
 events	tetris.cpp	/^void Tetris::events(){$/;"	f	class:Tetris
 getColumn	blocks/position.cpp	/^int Position::getColumn() const{return m_column;}$/;"	f	class:Position
+getGameBlocks	tetris.cpp	/^std::vector<std::unique_ptr<Block>> Tetris::getGameBlocks() const{$/;"	f	class:Tetris
+getID	blocks/block.cpp	/^int Block::getID() const {return m_id;}$/;"	f	class:Block
+getNextValidState	blocks/block.cpp	/^int Block::getNextValidState() const{$/;"	f	class:Block
+getRandomBlock	tetris.cpp	/^std::unique_ptr<Block> Tetris::getRandomBlock(){$/;"	f	class:Tetris
 getRow	blocks/position.cpp	/^int Position::getRow() const{return m_row;}$/;"	f	class:Position
 getSFMLColor	blocks/tilecolors.h	/^inline sf::Color getSFMLColor (CustomColors::Color color){$/;"	f
 getState	blocks/block.cpp	/^int Block::getState() const{return m_rotationalState;}$/;"	f	class:Block
+getTilePositions	blocks/block.cpp	/^posVect& Block::getTilePositions() {$/;"	f	class:Block
+getTilePositions	blocks/block.cpp	/^posVect& Block::getTilePositions(int state){$/;"	f	class:Block
+isMovePending	blocks/block.cpp	/^bool Block::isMovePending() const{$/;"	f	class:Block
+isValidMove	tetris.cpp	/^bool Tetris::isValidMove(int row, int column) const{$/;"	f	class:Tetris
+isValidRotation	tetris.cpp	/^bool Tetris::isValidRotation(int nextState) const{$/;"	f	class:Tetris
+isValidTiles	tetris.cpp	/^bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{$/;"	f	class:Tetris
 main	main.cpp	/^int main(int argc, char** argv){$/;"	f
 move	blocks/block.cpp	/^void Block::move(int rows, int columns){$/;"	f	class:Block
 operator <<	blocks/position.cpp	/^std::ostream& operator<< (std::ostream& out, const Position& obj){$/;"	f
 printGrid	tetris.cpp	/^void Tetris::printGrid(){$/;"	f	class:Tetris
+resetOffsets	blocks/block.cpp	/^void Block::resetOffsets(){$/;"	f	class:Block
+rotate	blocks/block.cpp	/^void Block::rotate(){$/;"	f	class:Block
 run	tetris.cpp	/^void Tetris::run(){ $/;"	f	class:Tetris
+updateCellPositions	blocks/block.cpp	/^void Block::updateCellPositions(std::map<int, posVect>& tileStates){$/;"	f	class:Block
 updatePosition	blocks/position.cpp	/^void Position::updatePosition(int rowOffset, int columnOffset){$/;"	f	class:Position
+~Block	blocks/block.h	/^    virtual ~Block(){};$/;"	f	class:Block

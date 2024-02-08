@@ -7,7 +7,7 @@
 
 class Block{
   using enum CustomColors::Color;
-
+  
   public:
     // Constructor
     Block(std::map<int, std::vector<Position>> cells, 
@@ -21,14 +21,16 @@ class Block{
 
     // Public methods
     int  getState() const;
+    int  getNextValidState() const; 
     int  getID() const;
     void move(int rows, int columns);
-    void draw(std::shared_ptr<sf::RenderWindow> window);
-  
+    void rotate();
+    void draw(std::shared_ptr<sf::RenderWindow> pWindow);
+    std::vector<Position>& getTilePositions();
+    std::vector<Position>& getTilePositions(int blockState);
+
   protected: 
     // Protected methods
-    void calculateCellPositions(std::vector<Position>& oldCells); 
-    
     virtual std::map<int, std::vector<Position>> initializeCells() const = 0; 
 
   private:
@@ -37,9 +39,11 @@ class Block{
     CustomColors::Color m_color {};      
     std::size_t m_cellSize {}; 
     int m_rotationalState {}; 
-    int rowOffset {};
-    int columnOffset {}; 
+    int m_rowOffset {};
+    int m_columnOffset {}; 
 
     // Private methods
-    void resetOffsets();
+    void updateCellPositions(std::map<int, std::vector<Position>>& tileStates);  
+    bool isMovePending() const;
+    void resetOffsets(); 
 };

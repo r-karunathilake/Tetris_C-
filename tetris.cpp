@@ -56,6 +56,36 @@ std::vector<std::unique_ptr<Block>> Tetris::getGameBlocks() const{
   return vector;
 }
 
+bool Tetris::isValidMove(int row, int column) const{
+  auto tilePositions = currentBlock->getTilePositions();
+  for(const auto& tilePos : tilePositions){
+    int new_row {tilePos.getRow() + row};
+    int new_column {tilePos.getColumn() + column};
+
+    if(new_row < 0 || new_row > s_numRows - 1 || new_column < 0 || new_column > s_numCols - 1){
+      return false;
+    }
+  }
+  return true; 
+}
+
+bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{
+  for(const auto& tilePos : tilePositions){
+    int row {tilePos.getRow()};
+    int column {tilePos.getColumn()};
+
+    if(row < 0 || row > s_numRows - 1 || column < 0 || column > s_numCols - 1){
+      return false; 
+    }
+  }  
+  return true;
+}
+
+bool Tetris::isValidRotation(int nextState) const{
+  auto tilePositions = currentBlock->getTilePositions(nextState); 
+  return isValidTiles(tilePositions); 
+}
+
 /***********************/
 /*  PROTECTED METHODS  */
 /***********************/
@@ -71,16 +101,40 @@ void Tetris::events(){
       }break;
 
       case sf::Event::KeyPressed:{
-        if(event->key.code == sf::Keyboard::Up){
-          //rotate = true;
-        }
-        else if(event->key.code == sf::Keyboard::Left){
-          //--dirx;
-        }
-        else if(event->key.code == sf::Keyboard::Right){
-          //++dirx;
+        switch(event->key.code){
+          case sf::Keyboard::Up:{
+            if(isValidRotation(currentBlock->getNextValidState())){
+              currentBlock->rotate();
+            }
+          }break;
+
+          case sf::Keyboard::Left:{
+            if(isValidMove(0, -1)){
+              currentBlock->move(0, -1);
+            }
+          }break;
+
+          case sf::Keyboard::Right:{
+            if(isValidMove(0, 1)){
+            currentBlock->move(0, 1);
+            }
+          }break;
+
+          case sf::Keyboard::Down:{
+            if(isValidMove(1, 0)){
+              currentBlock->move(1, 0);
+            }
+          }break;
+
+          default:{
+            // std::cout << "Keyboard keypress '" << event->key.code << "' ignored!.\n" << std::endl;
+          }
         }
       }break;
+    
+      default:{
+        //std::cout << "Event '" << event->type << "' not handled!\n" << std::endl;
+      }
     }
   }
 }
