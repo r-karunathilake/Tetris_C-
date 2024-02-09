@@ -25,7 +25,7 @@ Position	blocks/position.cpp	/^Position::Position(std::ptrdiff_t row, std::ptrdi
 Position	blocks/position.h	/^class Position{$/;"	c
 SBlock	blocks/sblock.cpp	/^    SBlock() $/;"	f	class:SBlock
 SBlock	blocks/sblock.cpp	/^class SBlock : public Block{$/;"	c	file:
-SFML	Makefile	/^SFML     := -lsfml-graphics -lsfml-window -lsfml-system$/;"	m
+SFML	Makefile	/^SFML     := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio$/;"	m
 SOURCE	Makefile	/^SOURCE   := main.cpp tetris.cpp $(wildcard **\/*.cpp)$/;"	m
 STD	Makefile	/^STD      := -std=c++20$/;"	m
 TARGET	Makefile	/^TARGET   := tetris$/;"	m
@@ -38,7 +38,6 @@ ZBlock	blocks/zblock.cpp	/^    ZBlock() $/;"	f	class:ZBlock
 ZBlock	blocks/zblock.cpp	/^class ZBlock : public Block{$/;"	c	file:
 clearAllCompleteGridRows	tetris.cpp	/^int Tetris::clearAllCompleteGridRows(){$/;"	f	class:Tetris
 clearGridRow	tetris.cpp	/^void Tetris::clearGridRow(std::ptrdiff_t row){$/;"	f	class:Tetris
-clock	tetris.h	/^    sf::Clock clock; \/\/ Start the SFML game clock$/;"	m	class:Tetris
 color_blue	blocks/tilecolors.h	/^    color_blue,$/;"	e	enum:CustomColors::Color
 color_cyan	blocks/tilecolors.h	/^    color_cyan,$/;"	e	enum:CustomColors::Color
 color_dark_grey	blocks/tilecolors.h	/^    color_dark_grey,$/;"	e	enum:CustomColors::Color
@@ -77,6 +76,7 @@ isMovePending	blocks/block.cpp	/^bool Block::isMovePending() const{$/;"	f	class:
 isValidMove	tetris.cpp	/^bool Tetris::isValidMove(std::ptrdiff_t row, std::ptrdiff_t column) const{$/;"	f	class:Tetris
 isValidRotation	tetris.cpp	/^bool Tetris::isValidRotation(int nextState) const{$/;"	f	class:Tetris
 isValidTiles	tetris.cpp	/^bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{$/;"	f	class:Tetris
+loadGameSounds	tetris.cpp	/^void Tetris::loadGameSounds(){$/;"	f	class:Tetris
 main	main.cpp	/^int main(int argc, char** argv){$/;"	f
 move	blocks/block.cpp	/^void Block::move(int rows, int columns){$/;"	f	class:Block
 moveBlockDown	tetris.cpp	/^void Tetris::moveBlockDown(){$/;"	f	class:Tetris

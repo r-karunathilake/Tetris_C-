@@ -1,6 +1,7 @@
 #pragma once                 // Header guard 
 
 #include <SFML/Graphics.hpp> // Open and draw on an OpenGL window 
+#include <SFML/Audio.hpp>    
 #include <memory>            // For std::shared_ptr access 
 #include <vector>
 
@@ -26,6 +27,15 @@ class Tetris{
     static constexpr std::ptrdiff_t s_numShapes  {7};
     static constexpr std::ptrdiff_t s_cellSize   {30};
 
+    // Load game music buffers 
+    static inline sf::Music m_gameMusic {};
+    static inline sf::SoundBuffer m_gameOverSoundBuffer {}; 
+    static inline sf::SoundBuffer m_rotateSoundBuffer {};
+    static inline sf::SoundBuffer m_clearRowSoundBuffer {};
+    static inline sf::Sound m_gameOverSound {};
+    static inline sf::Sound m_rotateSound {};
+    static inline sf::Sound m_clearRowSound {};
+
     /* Private methods */
     std::unique_ptr<Block> getRandomBlock(); 
     std::vector<std::unique_ptr<Block>> getGameBlocks() const;
@@ -44,16 +54,16 @@ class Tetris{
     void restartGame(); 
     void resetGameGrid();
     void updateGameScore(int linesCompleted, int numBlocksUsed);
+    void loadGameSounds(); 
     int  clearAllCompleteGridRows();
-
-
+    
     /* Private attributes */
     std::shared_ptr<sf::RenderWindow> m_window {}; 
-    std::vector<std::unique_ptr<Block>> gameBlocks {};
-    std::unique_ptr<Block> pCurrentBlock {};
-    std::unique_ptr<Block> pNextBlock {};
-    sf::Clock clock; // Start the SFML game clock
-    
+    std::vector<std::unique_ptr<Block>> m_gameBlocks {};
+    std::unique_ptr<Block> m_pCurrentBlock {};
+    std::unique_ptr<Block> m_pNextBlock {};
+    sf::Clock m_clock {}; // Start the SFML game clock
+
     // 2D array alias templating 
     template <typename  T, std::ptrdiff_t Rows, std::ptrdiff_t Cols>
     using array2D = std::array<std::array<T, Cols>, Rows>; 

@@ -7,22 +7,57 @@
 /* TETRIS CONSTRUCTOR */
 /**********************/
 Tetris::Tetris() 
-  : m_window     {configGameWindow()},
-    gameBlocks   {getGameBlocks()},
-    pCurrentBlock {getRandomBlock()},
-    pNextBlock    {getRandomBlock()}
+  : m_window        {configGameWindow()},
+    m_gameBlocks    {getGameBlocks()},
+    m_pCurrentBlock {getRandomBlock()},
+    m_pNextBlock    {getRandomBlock()}
 {
   m_window->setPosition(sf::Vector2i(100, 100));
   m_window->setFramerateLimit(60); // 60 FPS  
 
   // Load font to GPU memory!
-  if(!m_gameFont.loadFromFile("./assets/font/zerovelo.ttf")){
-    std::cout << "Unable to load font file: 'zerovelo.ttf'" << std::endl;
+  if(!m_gameFont.loadFromFile("./assets/font/game_played.ttf")){
+    std::cout << "Unable to load font file: 'game_played.ttf'\n" << std::endl;
   }
+  
+  // Load game music and sounds
+  loadGameSounds();
 }
+
 /***********************/
 /*   PRIVATE METHODS   */
 /***********************/
+void Tetris::loadGameSounds(){
+  if(!m_gameOverSoundBuffer.loadFromFile("./assets/sounds/game_over.ogg")){
+    std::cout << "Unable to load sound file: 'game_over.ogg'\n" << std::endl;
+  }
+  else{
+    m_gameOverSound = sf::Sound(m_gameOverSoundBuffer);
+  }
+
+  if(!m_rotateSoundBuffer.loadFromFile("./assets/sounds/rotate.wav")){
+    std::cout << "Unable to load sound file: 'rotate.wav'\n" << std::endl;
+  }
+  else{
+    m_rotateSound = sf::Sound(m_rotateSoundBuffer);
+  }
+
+  if(!m_clearRowSoundBuffer.loadFromFile("./assets/sounds/row_clear.wav")){
+    std::cout << "Unable to load soud file: 'row_clear.wav'\n" << std::endl;
+  }
+  else{
+    m_clearRowSound = sf::Sound(m_clearRowSoundBuffer);
+  }
+
+  if(!m_gameMusic.openFromFile("./assets/sounds/tetris.ogg")){
+    std::cout << "Unable to load music file: 'tetris.ogg'\n" << std::endl;
+  }
+  else{
+    m_gameMusic.setLoop(true);
+    m_gameMusic.setVolume(20.f);
+  }
+}
+
 std::shared_ptr<sf::RenderWindow> Tetris::configGameWindow() const{
     return std::make_shared<sf::RenderWindow>(sf::VideoMode(500, 620), 
                                               "Tetris C++", 
@@ -31,19 +66,19 @@ std::shared_ptr<sf::RenderWindow> Tetris::configGameWindow() const{
 
 std::unique_ptr<Block> Tetris::getRandomBlock(){
   // Populate game blocks
-  if(gameBlocks.empty()){
-    gameBlocks = getGameBlocks(); 
+  if(m_gameBlocks.empty()){
+    m_gameBlocks = getGameBlocks(); 
   }
  
   // Generate a random index 
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_int_distribution<std::ptrdiff_t> dis(0, gameBlocks.size() - 1);
+  std::uniform_int_distribution<std::ptrdiff_t> dis(0, m_gameBlocks.size() - 1);
   std::ptrdiff_t randIndex = dis(gen); 
   
   /* Each of the 7 blocks appear in game before a new cycle */ 
-  std::unique_ptr<Block> pBlock {std::move(gameBlocks[randIndex])};
-  gameBlocks.erase(gameBlocks.begin() + randIndex);
+  std::unique_ptr<Block> pBlock {std::move(m_gameBlocks[randIndex])};
+  m_gameBlocks.erase(m_gameBlocks.begin() + randIndex);
   
   return pBlock;
 }
@@ -63,7 +98,7 @@ std::vector<std::unique_ptr<Block>> Tetris::getGameBlocks() const{
 }
 
 bool Tetris::isValidMove(std::ptrdiff_t row, std::ptrdiff_t column) const{
-  auto tilePositions = pCurrentBlock->getTilePositions();
+  auto tilePositions = m_pCurrentBlock->getTilePositions();
   for(const auto& tilePos : tilePositions){
     std::ptrdiff_t new_row {tilePos.getRow() + row};
     std::ptrdiff_t new_column {tilePos.getColumn() + column};
@@ -93,14 +128,14 @@ bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{
 }
 
 bool Tetris::isValidRotation(int nextState) const{
-  auto tilePositions = pCurrentBlock->getTilePositions(nextState); 
+  auto tilePositions = m_pCurrentBlock->getTilePositions(nextState); 
   return isValidTiles(tilePositions); 
 }
 
 void Tetris::moveBlockDown(){
   // Look ahead to make sure the move is valid 
   if(isValidMove(1, 0)){
-    pCurrentBlock->move(1, 0);
+    m_pCurrentBlock->move(1, 0);
   }
   else{// The block has reached the bottom screen or collided with another block
     freezeBlock(); 
@@ -108,32 +143,38 @@ void Tetris::moveBlockDown(){
 }
 
 bool Tetris::isGameUpdateEvent(){
-  sf::Time timeElapsed {clock.getElapsedTime()};
+  sf::Time timeElapsed {m_clock.getElapsedTime()};
   
   if(timeElapsed >= s_updateTime){
-    clock.restart();
+    m_clock.restart();
     return true;
   }
   return false;
 }
 
 void Tetris::freezeBlock(){
-  auto tilePositions {pCurrentBlock->getTilePositions()};
+  auto tilePositions {m_pCurrentBlock->getTilePositions()};
   for(const auto& tilePos: tilePositions){
     // Update game grid with the color of Tetris block 
-    m_grid[tilePos.getRow()][tilePos.getColumn()] = pCurrentBlock->getColor();
+    m_grid[tilePos.getRow()][tilePos.getColumn()] = m_pCurrentBlock->getColor();
   }
   
-  // TODO: Make sure pNextBlock is not a NULL pointer?
-  pCurrentBlock = std::move(pNextBlock); // Freeze movement 
+  // TODO: Make sure m_pNextBlock is not a NULL pointer?
+  m_pCurrentBlock = std::move(m_pNextBlock); // Freeze movement 
   // If the new current block has no valid moves 
   if(noValidMoves()){
     // Game over
     s_gameOver = true; 
-    pNextBlock = nullptr;
+    m_pNextBlock = nullptr;
+  
+    // Stop the music
+    m_gameMusic.stop();
+
+    m_gameOverSound.play();
+
   }
   else{
-    pNextBlock = getRandomBlock(); 
+    m_pNextBlock = getRandomBlock(); 
     // Check for complete grid rows and clear them
     int rowsCleared {clearAllCompleteGridRows()};
     // Update score
@@ -144,7 +185,7 @@ void Tetris::freezeBlock(){
 bool Tetris::noValidMoves() const{
   // Check is Tetris block can be moved down or rotated 
   if(isValidMove(1, 0) || isValidMove(0, 1) || isValidMove(1, 0)
-     || isValidRotation(pCurrentBlock->getNextValidState())){
+     || isValidRotation(m_pCurrentBlock->getNextValidState())){
     return false;
   }
   return true;
@@ -187,6 +228,9 @@ int Tetris::clearAllCompleteGridRows(){
   // Iterate through the whole game grid
   for(std::ptrdiff_t currentRow {s_numRows - 1}; currentRow >= 0; --currentRow){
     if(isGridRowComplete(currentRow)){
+      // Play row clear sound 
+      m_clearRowSound.play();
+
       clearGridRow(currentRow);
       ++numCompletedRows;
     }
@@ -207,10 +251,12 @@ void Tetris::resetGameGrid(){
 
 void Tetris::restartGame(){
   resetGameGrid();
-  gameBlocks = getGameBlocks();
-  pCurrentBlock = getRandomBlock();
-  pNextBlock = getRandomBlock(); 
-  s_gameScore = 0; 
+  m_gameBlocks = getGameBlocks();
+  m_pCurrentBlock = getRandomBlock();
+  m_pNextBlock = getRandomBlock(); 
+  s_gameScore = 0;
+  m_gameOverSound.stop();
+  m_gameMusic.play();
 }
 
 /***********************/
@@ -242,20 +288,23 @@ void Tetris::events(){
           }break;
 
           case sf::Keyboard::Up:{
-            if(isValidRotation(pCurrentBlock->getNextValidState()) && !s_gameOver){
-              pCurrentBlock->rotate();
+            if(isValidRotation(m_pCurrentBlock->getNextValidState()) && !s_gameOver){
+              m_pCurrentBlock->rotate();
+              if(m_rotateSound.getStatus() == sf::Sound::Stopped){
+                m_rotateSound.play();
+              }
             }
           }break;
 
           case sf::Keyboard::Left:{
             if(isValidMove(0, -1) && !s_gameOver){
-              pCurrentBlock->move(0, -1);
+              m_pCurrentBlock->move(0, -1);
             }
           }break;
 
           case sf::Keyboard::Right:{
             if(isValidMove(0, 1) && !s_gameOver){
-            pCurrentBlock->move(0, 1);
+            m_pCurrentBlock->move(0, 1);
             }
           }break;
 
@@ -286,7 +335,7 @@ void Tetris::draw(){
   drawGUI();  
   drawGrid();
   
-  pCurrentBlock->draw(m_window, 11, 11);
+  m_pCurrentBlock->draw(m_window, 11, 11);
 
   // End drawing current frame and display
   m_window->display();
@@ -329,6 +378,9 @@ void Tetris::drawGUI(){
     overText.setPosition(sf::Vector2f(320, 450));
     overText.setStyle(sf::Text::Italic);
     m_window->draw(overText);
+  
+    //sf::Sound gameOverSound {sf::Sound(m_gameOverSoundBuffer)};
+    //gameOverSound.play();
   }
 }
 
@@ -383,11 +435,11 @@ void Tetris::drawNextBoard(const sf::Vector2f& size, const sf::Vector2f& positio
   nextText.setPosition(sf::Vector2f(position.x + ((size.x - textBounds.width) * 0.5), position.y - 40));
   m_window->draw(nextText);
 
-  if(pNextBlock){
+  if(m_pNextBlock){
     double xPos {0};
     double yPos {0};
 
-    switch(pNextBlock->getID()){
+    switch(m_pNextBlock->getID()){
       case 4:{ // O block
         xPos = position.x - 60;
         yPos = position.y + 60;
@@ -403,7 +455,7 @@ void Tetris::drawNextBoard(const sf::Vector2f& size, const sf::Vector2f& positio
         yPos = position.y + 60; 
       }
     }
-    pNextBlock->draw(m_window, xPos, yPos);
+    m_pNextBlock->draw(m_window, xPos, yPos);
   }
 }
 
@@ -431,6 +483,9 @@ void Tetris::updateGameScore(int linesCompleted, int numBlocksUsed){
 /*    PUBLIC METHODS   */
 /***********************/
 void Tetris::run(){ 
+  // Play game music
+  m_gameMusic.play(); 
+  
   while(m_window->isOpen()){
     events();
     draw();

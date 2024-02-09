@@ -4,7 +4,7 @@ STD      := -std=c++20
 DEBUG    := -g
 OPT      := -O0 # Disable compiler optimization 
 WARN     := -Wall
-SFML     := -lsfml-graphics -lsfml-window -lsfml-system
+SFML     := -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 CXXFLAGS := $(DEBUG) $(STD) $(OPT) $(WARN) $(SFML)
 SOURCE   := main.cpp tetris.cpp $(wildcard **/*.cpp)
 OBJS     := $(SOURCE:.cpp=.o) # Pattern substitution 
