@@ -51,7 +51,9 @@ color_yellow	blocks/tilecolors.h	/^    color_yellow,$/;"	e	enum:CustomColors::Co
 configGameWindow	tetris.cpp	/^std::shared_ptr<sf::RenderWindow> Tetris::configGameWindow() const{$/;"	f	class:Tetris
 draw	blocks/block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> pWindow) {$/;"	f	class:Block
 draw	tetris.cpp	/^void Tetris::draw(){$/;"	f	class:Tetris
+drawGUI	tetris.cpp	/^void Tetris::drawGUI(){$/;"	f	class:Tetris
 drawGrid	tetris.cpp	/^void Tetris::drawGrid(){$/;"	f	class:Tetris
+drawRoundedRectangle	tetris.cpp	/^void Tetris::drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position){$/;"	f	class:Tetris
 events	tetris.cpp	/^void Tetris::events(){$/;"	f	class:Tetris
 freezeBlock	tetris.cpp	/^void Tetris::freezeBlock(){$/;"	f	class:Tetris
 getColor	blocks/block.cpp	/^CustomColors::Color Block::getColor() const{return m_color;}$/;"	f	class:Block

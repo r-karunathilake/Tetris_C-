@@ -18,7 +18,7 @@
 class Tetris{
   private:
     static inline    bool           gameOver     {false};
-    static inline    sf::Time       s_updateTime {sf::milliseconds(10)};
+    static inline    sf::Time       s_updateTime {sf::milliseconds(300)};
     static constexpr std::ptrdiff_t s_numRows    {20};
     static constexpr std::ptrdiff_t s_numCols    {10};
     static constexpr std::ptrdiff_t s_numSquares {4};
@@ -41,7 +41,7 @@ class Tetris{
     void clearGridRow(std::ptrdiff_t row); 
     void moveGridRowDown(std::ptrdiff_t row, std::ptrdiff_t numRowsDown);
     void restartGame(); 
-    void resetGameGrid(); 
+    void resetGameGrid();
     int  clearAllCompleteGridRows();
 
 
@@ -56,12 +56,15 @@ class Tetris{
     template <typename  T, std::ptrdiff_t Rows, std::ptrdiff_t Cols>
     using array2D = std::array<std::array<T, Cols>, Rows>; 
     array2D<CustomColors::Color, s_numRows, s_numCols> m_grid {}; 
+    sf::Font m_gameFont {};
 
   protected:
     void events();
     void draw();
     void printGrid();
     void drawGrid();
+    void drawGUI(); 
+    void drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position); 
 
   public:
     Tetris();

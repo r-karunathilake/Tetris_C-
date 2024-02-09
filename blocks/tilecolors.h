@@ -11,6 +11,7 @@ namespace CustomColors{
   auto const purple      {sf::Color(166, 0, 247, 255)};
   auto const cyan        {sf::Color(21, 204, 209, 255)};
   auto const blue        {sf::Color(13, 64, 216, 255)};
+  auto const bg_purple   {sf::Color(0, 76, 156)};  
   
   enum Color{
     color_dark_grey,

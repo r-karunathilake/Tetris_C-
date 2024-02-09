@@ -13,12 +13,17 @@ Tetris::Tetris()
 {
   m_window->setPosition(sf::Vector2i(100, 100));
   m_window->setFramerateLimit(60); // 60 FPS  
+
+  // Load font to GPU memory!
+  if(!m_gameFont.loadFromFile("./assets/font/zerovelo.ttf")){
+    std::cout << "Unable to load font file: 'zerovelo.ttf'" << std::endl;
+  }
 }
 /***********************/
 /*   PRIVATE METHODS   */
 /***********************/
 std::shared_ptr<sf::RenderWindow> Tetris::configGameWindow() const{
-    return std::make_shared<sf::RenderWindow>(sf::VideoMode(300, 600), 
+    return std::make_shared<sf::RenderWindow>(sf::VideoMode(500, 620), 
                                               "Tetris C++", 
                                               sf::Style::Titlebar | sf::Style::Close);
 }
@@ -271,8 +276,9 @@ void Tetris::events(){
 
 void Tetris::draw(){
   // Clear the screen with black color
-  m_window->clear(sf::Color::Black);
- 
+  m_window->clear(CustomColors::bg_purple);
+  
+  drawGUI();  
   drawGrid();
   
   pCurrentBlock->draw(m_window); 
@@ -286,7 +292,7 @@ void Tetris::drawGrid(){
     for(size_t column {0}; column < m_grid[row].size(); ++column){
       auto cellColor = m_grid[row][column];
       auto cell {sf::RectangleShape(sf::Vector2f(s_cellSize - 1, s_cellSize - 1))};
-      cell.setPosition(column * s_cellSize + 1, row * s_cellSize + 1);
+      cell.setPosition(column * s_cellSize + 11, row * s_cellSize + 11);
       cell.setFillColor(getSFMLColor(cellColor));
       m_window->draw(cell);
     }
@@ -300,6 +306,47 @@ void Tetris::printGrid(){
     }
     std::cout << '\n';
   }
+}
+
+void Tetris::drawGUI(){
+  // Draw the score text 
+  sf::Text scoreText {sf::Text("Score", m_gameFont, 32)};
+  scoreText.setFillColor(sf::Color::White);
+  scoreText.setLetterSpacing(2);
+  scoreText.setPosition(sf::Vector2f(325, 15));
+  m_window->draw(scoreText);
+
+  // Draw score board 
+  drawRoundedRectangle(sf::Vector2f(170, 60), sf::Vector2f(320, 55));
+  
+  // Draw the next block text
+  sf::Text nextText {sf::Text("Next", m_gameFont, 32)};
+  nextText.setFillColor(sf::Color::White);
+  nextText.setLetterSpacing(2);
+  nextText.setPosition(sf::Vector2f(340, 175));
+  m_window->draw(nextText);
+
+  // Draw next block board
+  drawRoundedRectangle(sf::Vector2f(170, 180), sf::Vector2f(320, 215));
+
+  // Draw game over text 
+  if(gameOver){
+    sf::Text overText {sf::Text("GAME\nOVER", m_gameFont, 32)};
+    overText.setFillColor(sf::Color::Red);
+    overText.setLetterSpacing(2);
+    overText.setLineSpacing(1);
+    overText.setPosition(sf::Vector2f(320, 450));
+    overText.setStyle(sf::Text::Italic);
+    m_window->draw(overText);
+  }
+}
+
+void Tetris::drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position){
+  sf::RectangleShape rect(size);
+  rect.setPosition(position);
+  rect.setFillColor(CustomColors::dark_grey);
+
+  m_window->draw(rect);
 }
 
 /***********************/

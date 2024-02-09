@@ -24,7 +24,7 @@ void Block::draw(std::shared_ptr<sf::RenderWindow> pWindow) {
   for(const auto& tilePos : m_cells[getState()]){
     //std::cout << tilePos << ", ";
     auto cell {sf::RectangleShape(sf::Vector2f(m_cellSize - 1, m_cellSize - 1))};
-    cell.setPosition(tilePos.getColumn() * m_cellSize + 1, tilePos.getRow() * m_cellSize + 1);
+    cell.setPosition(tilePos.getColumn() * m_cellSize + 11, tilePos.getRow() * m_cellSize + 11);
     cell.setFillColor(getSFMLColor(m_color));
     
     pWindow->draw(cell);
