@@ -49,11 +49,13 @@ color_red	blocks/tilecolors.h	/^    color_red,$/;"	e	enum:CustomColors::Color
 color_transparent	blocks/tilecolors.h	/^    color_transparent,    $/;"	e	enum:CustomColors::Color
 color_yellow	blocks/tilecolors.h	/^    color_yellow,$/;"	e	enum:CustomColors::Color
 configGameWindow	tetris.cpp	/^std::shared_ptr<sf::RenderWindow> Tetris::configGameWindow() const{$/;"	f	class:Tetris
-draw	blocks/block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> pWindow) {$/;"	f	class:Block
+draw	blocks/block.cpp	/^void Block::draw(std::shared_ptr<sf::RenderWindow> pWindow, int offsetX, int offsetY) {$/;"	f	class:Block
 draw	tetris.cpp	/^void Tetris::draw(){$/;"	f	class:Tetris
 drawGUI	tetris.cpp	/^void Tetris::drawGUI(){$/;"	f	class:Tetris
 drawGrid	tetris.cpp	/^void Tetris::drawGrid(){$/;"	f	class:Tetris
-drawRoundedRectangle	tetris.cpp	/^void Tetris::drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position){$/;"	f	class:Tetris
+drawNextBoard	tetris.cpp	/^void Tetris::drawNextBoard(const sf::Vector2f& size, const sf::Vector2f& position) const{$/;"	f	class:Tetris
+drawRoundedRectangle	tetris.cpp	/^void Tetris::drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position) const{$/;"	f	class:Tetris
+drawScoreBoard	tetris.cpp	/^void Tetris::drawScoreBoard(const sf::Vector2f& size, const sf::Vector2f& position) const{$/;"	f	class:Tetris
 events	tetris.cpp	/^void Tetris::events(){$/;"	f	class:Tetris
 freezeBlock	tetris.cpp	/^void Tetris::freezeBlock(){$/;"	f	class:Tetris
 getColor	blocks/block.cpp	/^CustomColors::Color Block::getColor() const{return m_color;}$/;"	f	class:Block
@@ -89,5 +91,6 @@ restartGame	tetris.cpp	/^void Tetris::restartGame(){$/;"	f	class:Tetris
 rotate	blocks/block.cpp	/^void Block::rotate(){$/;"	f	class:Block
 run	tetris.cpp	/^void Tetris::run(){ $/;"	f	class:Tetris
 updateCellPositions	blocks/block.cpp	/^void Block::updateCellPositions(std::map<int, posVect>& tileStates){$/;"	f	class:Block
+updateGameScore	tetris.cpp	/^void Tetris::updateGameScore(int linesCompleted, int numBlocksUsed){$/;"	f	class:Tetris
 updatePosition	blocks/position.cpp	/^void Position::updatePosition(std::ptrdiff_t rowOffset, std::ptrdiff_t columnOffset){$/;"	f	class:Position
 ~Block	blocks/block.h	/^    virtual ~Block(){};$/;"	f	class:Block

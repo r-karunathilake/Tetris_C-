@@ -17,7 +17,8 @@
 
 class Tetris{
   private:
-    static inline    bool           gameOver     {false};
+    static inline    int            s_gameScore  {0};
+    static inline    bool           s_gameOver   {false};
     static inline    sf::Time       s_updateTime {sf::milliseconds(300)};
     static constexpr std::ptrdiff_t s_numRows    {20};
     static constexpr std::ptrdiff_t s_numCols    {10};
@@ -42,6 +43,7 @@ class Tetris{
     void moveGridRowDown(std::ptrdiff_t row, std::ptrdiff_t numRowsDown);
     void restartGame(); 
     void resetGameGrid();
+    void updateGameScore(int linesCompleted, int numBlocksUsed);
     int  clearAllCompleteGridRows();
 
 
@@ -64,7 +66,9 @@ class Tetris{
     void printGrid();
     void drawGrid();
     void drawGUI(); 
-    void drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position); 
+    void drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position) const; 
+    void drawScoreBoard(const sf::Vector2f& size, const sf::Vector2f& position) const;
+    void drawNextBoard(const sf::Vector2f& size, const sf::Vector2f& position) const;
 
   public:
     Tetris();

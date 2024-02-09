@@ -27,7 +27,7 @@ class Block{
     CustomColors::Color getColor() const;
     void move(int rows, int columns);
     void rotate();
-    void draw(std::shared_ptr<sf::RenderWindow> pWindow);
+    void draw(std::shared_ptr<sf::RenderWindow> pWindow, int offsetX=0, int offsetY=0);
     std::vector<Position>& getTilePositions();
     std::vector<Position>& getTilePositions(int blockState);
     

@@ -1,4 +1,5 @@
 #include <random>
+#include <string>
 
 #include "tetris.h"
 
@@ -128,20 +129,22 @@ void Tetris::freezeBlock(){
   // If the new current block has no valid moves 
   if(noValidMoves()){
     // Game over
-    gameOver = true; 
+    s_gameOver = true; 
     pNextBlock = nullptr;
   }
   else{
     pNextBlock = getRandomBlock(); 
     // Check for complete grid rows and clear them
-    clearAllCompleteGridRows(); 
+    int rowsCleared {clearAllCompleteGridRows()};
+    // Update score
+    updateGameScore(rowsCleared, 0);
   }
 }
 
 bool Tetris::noValidMoves() const{
   // Check is Tetris block can be moved down or rotated 
-  if(isValidMove(1, 0) && isValidMove(0, 1) && isValidMove(1, 0)
-     && isValidRotation(pCurrentBlock->getNextValidState())){
+  if(isValidMove(1, 0) || isValidMove(0, 1) || isValidMove(1, 0)
+     || isValidRotation(pCurrentBlock->getNextValidState())){
     return false;
   }
   return true;
@@ -207,6 +210,7 @@ void Tetris::restartGame(){
   gameBlocks = getGameBlocks();
   pCurrentBlock = getRandomBlock();
   pNextBlock = getRandomBlock(); 
+  s_gameScore = 0; 
 }
 
 /***********************/
@@ -231,33 +235,34 @@ void Tetris::events(){
                                     
           // Restart game
           case sf::Keyboard::R:{
-            if(gameOver){
-              gameOver = false;
+            if(s_gameOver){
+              s_gameOver = false;
               restartGame(); 
             }
           }break;
 
           case sf::Keyboard::Up:{
-            if(isValidRotation(pCurrentBlock->getNextValidState()) && !gameOver){
+            if(isValidRotation(pCurrentBlock->getNextValidState()) && !s_gameOver){
               pCurrentBlock->rotate();
             }
           }break;
 
           case sf::Keyboard::Left:{
-            if(isValidMove(0, -1) && !gameOver){
+            if(isValidMove(0, -1) && !s_gameOver){
               pCurrentBlock->move(0, -1);
             }
           }break;
 
           case sf::Keyboard::Right:{
-            if(isValidMove(0, 1) && !gameOver){
+            if(isValidMove(0, 1) && !s_gameOver){
             pCurrentBlock->move(0, 1);
             }
           }break;
 
           case sf::Keyboard::Down:{
-            if(!gameOver){
-              moveBlockDown();  
+            if(!s_gameOver){
+              moveBlockDown(); 
+              updateGameScore(0, 1);
             }
           }break;
 
@@ -281,7 +286,7 @@ void Tetris::draw(){
   drawGUI();  
   drawGrid();
   
-  pCurrentBlock->draw(m_window); 
+  pCurrentBlock->draw(m_window, 11, 11);
 
   // End drawing current frame and display
   m_window->display();
@@ -309,28 +314,14 @@ void Tetris::printGrid(){
 }
 
 void Tetris::drawGUI(){
-  // Draw the score text 
-  sf::Text scoreText {sf::Text("Score", m_gameFont, 32)};
-  scoreText.setFillColor(sf::Color::White);
-  scoreText.setLetterSpacing(2);
-  scoreText.setPosition(sf::Vector2f(325, 15));
-  m_window->draw(scoreText);
-
   // Draw score board 
-  drawRoundedRectangle(sf::Vector2f(170, 60), sf::Vector2f(320, 55));
+  drawScoreBoard(sf::Vector2f(170, 60), sf::Vector2f(320, 55));
   
   // Draw the next block text
-  sf::Text nextText {sf::Text("Next", m_gameFont, 32)};
-  nextText.setFillColor(sf::Color::White);
-  nextText.setLetterSpacing(2);
-  nextText.setPosition(sf::Vector2f(340, 175));
-  m_window->draw(nextText);
-
-  // Draw next block board
-  drawRoundedRectangle(sf::Vector2f(170, 180), sf::Vector2f(320, 215));
-
+  drawNextBoard(sf::Vector2f(170, 180), sf::Vector2f(320, 215));
+ 
   // Draw game over text 
-  if(gameOver){
+  if(s_gameOver){
     sf::Text overText {sf::Text("GAME\nOVER", m_gameFont, 32)};
     overText.setFillColor(sf::Color::Red);
     overText.setLetterSpacing(2);
@@ -341,12 +332,99 @@ void Tetris::drawGUI(){
   }
 }
 
-void Tetris::drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position){
+void Tetris::drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position) const{
+  // TODO: implement actual rounded corner functionality
+
   sf::RectangleShape rect(size);
   rect.setPosition(position);
   rect.setFillColor(CustomColors::dark_grey);
-
   m_window->draw(rect);
+}
+
+void Tetris::drawScoreBoard(const sf::Vector2f& size, const sf::Vector2f& position) const{
+  
+  // Draw the score label text
+  sf::Text scoreText {sf::Text("Score", m_gameFont, 32)};
+  scoreText.setFillColor(sf::Color::White);
+  scoreText.setLetterSpacing(2);
+  // Get text box size 
+  sf::FloatRect labelTextBounds {scoreText.getLocalBounds()};
+  scoreText.setPosition(sf::Vector2f(position.x + ((size.x - labelTextBounds.width) * 0.5), position.y - 40));
+  m_window->draw(scoreText);
+  
+  // Draw the score board
+  drawRoundedRectangle(size, position);
+
+  // Draw the score 
+  sf::Text score {sf::Text(std::to_string(s_gameScore), m_gameFont, 24)};
+  score.setFillColor(sf::Color::White);
+  score.setLetterSpacing(2);
+  
+  // Get the size of the text box 
+  sf::FloatRect textBounds {score.getLocalBounds()};
+  double xPos {position.x + ((size.x - textBounds.width) * 0.5)};
+  double yPos {position.y + (0.5 * (size.y - textBounds.height))};
+
+  // Adjust the text position based on text size relative to score board 
+  score.setPosition(sf::Vector2f(xPos, yPos));
+  m_window->draw(score);
+}
+
+void Tetris::drawNextBoard(const sf::Vector2f& size, const sf::Vector2f& position) const{
+  // Draw next block board
+  drawRoundedRectangle(size, position);
+
+  sf::Text nextText {sf::Text("Next", m_gameFont, 32)};
+  nextText.setFillColor(sf::Color::White);
+  nextText.setLetterSpacing(2);
+
+  // Get size of the text box
+  sf::FloatRect textBounds = nextText.getLocalBounds();
+  nextText.setPosition(sf::Vector2f(position.x + ((size.x - textBounds.width) * 0.5), position.y - 40));
+  m_window->draw(nextText);
+
+  if(pNextBlock){
+    double xPos {0};
+    double yPos {0};
+
+    switch(pNextBlock->getID()){
+      case 4:{ // O block
+        xPos = position.x - 60;
+        yPos = position.y + 60;
+      }break; 
+      
+      case 3:{ // I block
+        xPos = position.x - 60;
+        yPos = position.y + 80;
+      }break;
+
+      default:{ 
+        xPos = position.x - 45;
+        yPos = position.y + 60; 
+      }
+    }
+    pNextBlock->draw(m_window, xPos, yPos);
+  }
+}
+
+void Tetris::updateGameScore(int linesCompleted, int numBlocksUsed){
+  switch(linesCompleted){
+    case 1:{
+      s_gameScore += 100;
+    }break;
+
+    case 2:{
+      s_gameScore += 300;
+    }break;
+
+    case 3:{
+      s_gameScore += 500;
+    }break;
+
+    default:
+      break;
+  }
+  s_gameScore += numBlocksUsed; 
 }
 
 /***********************/
@@ -356,7 +434,7 @@ void Tetris::run(){
   while(m_window->isOpen()){
     events();
     draw();
-    if(isGameUpdateEvent() && !gameOver){
+    if(isGameUpdateEvent() && !s_gameOver){
       moveBlockDown(); 
     }
     // printGrid(); 
