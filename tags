@@ -38,9 +38,9 @@ ZBlock	blocks/zblock.cpp	/^    ZBlock() $/;"	f	class:ZBlock
 ZBlock	blocks/zblock.cpp	/^class ZBlock : public Block{$/;"	c	file:
 clearAllCompleteGridRows	tetris.cpp	/^int Tetris::clearAllCompleteGridRows(){$/;"	f	class:Tetris
 clearGridRow	tetris.cpp	/^void Tetris::clearGridRow(std::ptrdiff_t row){$/;"	f	class:Tetris
+color_black	blocks/tilecolors.h	/^    color_black,$/;"	e	enum:CustomColors::Color
 color_blue	blocks/tilecolors.h	/^    color_blue,$/;"	e	enum:CustomColors::Color
 color_cyan	blocks/tilecolors.h	/^    color_cyan,$/;"	e	enum:CustomColors::Color
-color_dark_grey	blocks/tilecolors.h	/^    color_dark_grey,$/;"	e	enum:CustomColors::Color
 color_green	blocks/tilecolors.h	/^    color_green,$/;"	e	enum:CustomColors::Color
 color_orange	blocks/tilecolors.h	/^    color_orange,$/;"	e	enum:CustomColors::Color
 color_purple	blocks/tilecolors.h	/^    color_purple,$/;"	e	enum:CustomColors::Color
@@ -77,6 +77,7 @@ isValidMove	tetris.cpp	/^bool Tetris::isValidMove(std::ptrdiff_t row, std::ptrdi
 isValidRotation	tetris.cpp	/^bool Tetris::isValidRotation(int nextState) const{$/;"	f	class:Tetris
 isValidTiles	tetris.cpp	/^bool Tetris::isValidTiles(const std::vector<Position>& tilePositions) const{$/;"	f	class:Tetris
 loadGameSounds	tetris.cpp	/^void Tetris::loadGameSounds(){$/;"	f	class:Tetris
+loadIcons	tetris.cpp	/^void Tetris::loadIcons(){$/;"	f	class:Tetris
 main	main.cpp	/^int main(int argc, char** argv){$/;"	f
 move	blocks/block.cpp	/^void Block::move(int rows, int columns){$/;"	f	class:Block
 moveBlockDown	tetris.cpp	/^void Tetris::moveBlockDown(){$/;"	f	class:Tetris

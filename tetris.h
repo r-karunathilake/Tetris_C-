@@ -55,6 +55,7 @@ class Tetris{
     void resetGameGrid();
     void updateGameScore(int linesCompleted, int numBlocksUsed);
     void loadGameSounds(); 
+    void loadIcons();
     int  clearAllCompleteGridRows();
     
     /* Private attributes */

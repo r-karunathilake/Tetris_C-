@@ -3,15 +3,19 @@
 
 #include "tetris.h"
 
-/**********************/
-/* TETRIS CONSTRUCTOR */
-/**********************/
+/************************************************************************************/
+/**************************   TETRIS CONSTRUCTOR   **********************************/
+/************************************************************************************/
+
 Tetris::Tetris() 
   : m_window        {configGameWindow()},
     m_gameBlocks    {getGameBlocks()},
     m_pCurrentBlock {getRandomBlock()},
     m_pNextBlock    {getRandomBlock()}
 {
+  // Load game taskbar icon
+  loadIcons();
+
   m_window->setPosition(sf::Vector2i(100, 100));
   m_window->setFramerateLimit(60); // 60 FPS  
 
@@ -24,9 +28,58 @@ Tetris::Tetris()
   loadGameSounds();
 }
 
-/***********************/
-/*   PRIVATE METHODS   */
-/***********************/
+/************************************************************************************/
+/**************************   PUBLIC METHODS       **********************************/
+/************************************************************************************/
+
+void Tetris::run(){ 
+  // Play game music
+  m_gameMusic.play(); 
+  
+  while(m_window->isOpen()){
+    events();
+    draw();
+    if(isGameUpdateEvent() && !s_gameOver){
+      moveBlockDown(); 
+    }
+    // printGrid(); 
+  }
+}
+
+/************************************************************************************/
+/**************************   PRIVATE METHODS      **********************************/
+/************************************************************************************/
+
+void Tetris::loadIcons(){
+  // Load all icons files of different sizes 
+  std::vector<std::string> iconFilePaths = {"./assets/icons/2G1-32.png", 
+                                            "./assets/icons/2G1-16.png",
+                                            "./assets/icons/2G1-48.png",
+                                            "./assets/icons/2G1-64.png",
+                                            "./assets/icons/2G1-96.png",
+                                            "./assets/icons/2G1-128.png",
+                                            "./assets/icons/2G1-256.png",
+                                            "./assets/icons/2G1-512.png",
+                                            "./assets/icons/2G1-1024.png"};
+  std::vector<sf::Image> iconImages {};
+
+  for(const auto& path : iconFilePaths){
+    sf::Image icon {};
+    if(!icon.loadFromFile(path)){
+      std::cout << "Unable to load font file: '" << path <<  "'.\n" << std::endl;
+    }
+    else{
+      iconImages.push_back(icon);
+    }
+  }
+
+  // Set the window icon
+  if(!iconImages.empty()){
+    sf::Image icon {iconImages[0]};
+    m_window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+  }
+}
+
 void Tetris::loadGameSounds(){
   if(!m_gameOverSoundBuffer.loadFromFile("./assets/sounds/game_over.ogg")){
     std::cout << "Unable to load sound file: 'game_over.ogg'\n" << std::endl;
@@ -201,7 +254,7 @@ bool Tetris::isGridCellEmpty(std::ptrdiff_t row, std::ptrdiff_t column) const{
 bool Tetris::isGridRowComplete(std::ptrdiff_t row) const{
   auto gridRow {m_grid[row]};  
   for(const auto& color : gridRow){
-    if(color == CustomColors::color_dark_grey){
+    if(color == CustomColors::color_black){
       return false;
     }
   } 
@@ -211,7 +264,7 @@ bool Tetris::isGridRowComplete(std::ptrdiff_t row) const{
 void Tetris::clearGridRow(std::ptrdiff_t row){
   for(std::ptrdiff_t column {0}; column < s_numCols; ++column){
     // Set tile to background color
-    m_grid[row][column] = CustomColors::color_dark_grey;
+    m_grid[row][column] = CustomColors::color_black;
   }
 }
 
@@ -219,7 +272,7 @@ void Tetris::moveGridRowDown(std::ptrdiff_t row, std::ptrdiff_t numRowsDown){
   for(std::ptrdiff_t column {0}; column < s_numCols; ++column){
     m_grid[row + numRowsDown][column] = m_grid[row][column];
     // Set tile to background color
-    m_grid[row][column] = CustomColors::color_dark_grey;
+    m_grid[row][column] = CustomColors::color_black;
   }
 }
 
@@ -244,7 +297,7 @@ int Tetris::clearAllCompleteGridRows(){
 void Tetris::resetGameGrid(){
   for(size_t row {0}; row < s_numRows; ++row){
     for(size_t column {0}; column < s_numCols; ++column){
-      m_grid[row][column] = CustomColors::color_dark_grey;
+      m_grid[row][column] = CustomColors::color_black;
     }
   }
 }
@@ -259,9 +312,10 @@ void Tetris::restartGame(){
   m_gameMusic.play();
 }
 
-/***********************/
-/*  PROTECTED METHODS  */
-/***********************/
+/************************************************************************************/
+/**************************   PROTECTED METHODS      ********************************/
+/************************************************************************************/
+
 void Tetris::events(){
   auto event {std::make_shared<sf::Event>()};
   
@@ -329,8 +383,8 @@ void Tetris::events(){
 }
 
 void Tetris::draw(){
-  // Clear the screen with black color
-  m_window->clear(CustomColors::bg_purple);
+  // Clear the screen with dark purple color
+  m_window->clear(CustomColors::dark_purple);
   
   drawGUI();  
   drawGrid();
@@ -375,22 +429,56 @@ void Tetris::drawGUI(){
     overText.setFillColor(sf::Color::Red);
     overText.setLetterSpacing(2);
     overText.setLineSpacing(1);
-    overText.setPosition(sf::Vector2f(320, 450));
+    overText.setPosition(sf::Vector2f(350, 450));
     overText.setStyle(sf::Text::Italic);
     m_window->draw(overText);
-  
-    //sf::Sound gameOverSound {sf::Sound(m_gameOverSoundBuffer)};
-    //gameOverSound.play();
   }
 }
 
 void Tetris::drawRoundedRectangle(const sf::Vector2f& size, const sf::Vector2f& position) const{
-  // TODO: implement actual rounded corner functionality
+  float cornerRadius {20.0};
+  sf::Color fillColor {CustomColors::dark_grey};
 
-  sf::RectangleShape rect(size);
-  rect.setPosition(position);
-  rect.setFillColor(CustomColors::dark_grey);
-  m_window->draw(rect);
+  // Main rectangle and side rectangles 
+  sf::RectangleShape mainRect {sf::Vector2f(size.x - (2 * cornerRadius), size.y)};
+  sf::RectangleShape rightRect {sf::Vector2f(cornerRadius, size.y - (2 * cornerRadius))};
+  sf::RectangleShape leftRect {sf::Vector2f(cornerRadius, size.y - (2 * cornerRadius))};
+
+  // Four corner circles 
+  sf::CircleShape topLeftCircle {cornerRadius};
+  sf::CircleShape topRightCircle {cornerRadius};
+  sf::CircleShape bottomLeftCircle {cornerRadius};
+  sf::CircleShape bottomRightCircle {cornerRadius};
+
+  // Set the position of rectangles and circles 
+  mainRect.setPosition(position.x + cornerRadius, position.y);
+  rightRect.setPosition((position.x + size.x) - cornerRadius, position.y + cornerRadius);
+  leftRect.setPosition(position.x, position.y + cornerRadius);
+
+  topLeftCircle.setPosition(position.x, position.y);
+  topRightCircle.setPosition((position.x + size.x) - (2 * cornerRadius), position.y);
+  bottomLeftCircle.setPosition(position.x, position.y + (size.y - 2 * cornerRadius));
+  bottomRightCircle.setPosition((position.x + size.x) - (2 * cornerRadius), (position.y + size.y) - (2 * cornerRadius));
+
+  // Set fill color for all the shapes 
+  mainRect.setFillColor(fillColor);
+  leftRect.setFillColor(fillColor);
+  rightRect.setFillColor(fillColor);
+
+  topLeftCircle.setFillColor(fillColor);
+  topRightCircle.setFillColor(fillColor);
+  bottomLeftCircle.setFillColor(fillColor);
+  bottomRightCircle.setFillColor(fillColor);
+
+  // Draw all the shapes 
+  m_window->draw(mainRect);
+  m_window->draw(leftRect);
+  m_window->draw(rightRect);
+
+  m_window->draw(topLeftCircle);
+  m_window->draw(topRightCircle);
+  m_window->draw(bottomLeftCircle);
+  m_window->draw(bottomRightCircle);
 }
 
 void Tetris::drawScoreBoard(const sf::Vector2f& size, const sf::Vector2f& position) const{
@@ -399,6 +487,7 @@ void Tetris::drawScoreBoard(const sf::Vector2f& size, const sf::Vector2f& positi
   sf::Text scoreText {sf::Text("Score", m_gameFont, 32)};
   scoreText.setFillColor(sf::Color::White);
   scoreText.setLetterSpacing(2);
+  
   // Get text box size 
   sf::FloatRect labelTextBounds {scoreText.getLocalBounds()};
   scoreText.setPosition(sf::Vector2f(position.x + ((size.x - labelTextBounds.width) * 0.5), position.y - 40));
@@ -408,14 +497,14 @@ void Tetris::drawScoreBoard(const sf::Vector2f& size, const sf::Vector2f& positi
   drawRoundedRectangle(size, position);
 
   // Draw the score 
-  sf::Text score {sf::Text(std::to_string(s_gameScore), m_gameFont, 24)};
+  sf::Text score {sf::Text(std::to_string(s_gameScore), m_gameFont, 28)};
   score.setFillColor(sf::Color::White);
   score.setLetterSpacing(2);
   
   // Get the size of the text box 
   sf::FloatRect textBounds {score.getLocalBounds()};
   double xPos {position.x + ((size.x - textBounds.width) * 0.5)};
-  double yPos {position.y + (0.5 * (size.y - textBounds.height))};
+  double yPos {position.y + (0.25 * (size.y - textBounds.height))};
 
   // Adjust the text position based on text size relative to score board 
   score.setPosition(sf::Vector2f(xPos, yPos));
@@ -477,21 +566,4 @@ void Tetris::updateGameScore(int linesCompleted, int numBlocksUsed){
       break;
   }
   s_gameScore += numBlocksUsed; 
-}
-
-/***********************/
-/*    PUBLIC METHODS   */
-/***********************/
-void Tetris::run(){ 
-  // Play game music
-  m_gameMusic.play(); 
-  
-  while(m_window->isOpen()){
-    events();
-    draw();
-    if(isGameUpdateEvent() && !s_gameOver){
-      moveBlockDown(); 
-    }
-    // printGrid(); 
-  }
 }
