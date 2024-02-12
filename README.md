@@ -14,10 +14,11 @@ This repository contains the source code for my Tetris remake in C++ using the S
 - Next Tetris block board 
 
 ## Controls
-- Rotate Tetris Block:     Up-Arrow (&uarr)
-- Move Tetris Block Left:  Left-Arrow (&larr)
-- Move Tetris Block Right: Right-Arrow (&rarr)
-- Move Tetris Block Down:  Down-Arrow(&darr)
+- Rotate Tetris Block    :  Up-Arrow (&uarr;)
+- Move Tetris Block Left :  Left-Arrow (&larr;)
+- Move Tetris Block Right:  Right-Arrow (&rarr;)
+- Move Tetris Block Down :  Down-Arrow(&darr;)
+- Restart Game           :  R-key  
 
 ## Dependencies 
 - C++20
