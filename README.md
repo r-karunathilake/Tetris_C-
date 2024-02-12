@@ -6,6 +6,8 @@ Welcome!
 
 This repository contains the source code for my Tetris remake in C++ using the SFML software development library. I mainly created this project to practice my C++ coding. If you wish, you can use, modify, and distribute this code according to the terms of the license provided. 
 
+![Main Tetris game window.](./assets/Tetris.JPG)
+
 ## Features 
 - Standard Tetris rules 
 - Random block generation
